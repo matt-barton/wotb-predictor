@@ -6,6 +6,7 @@
 var express = require('express');
 var app = express();
 var port = 3000;
+var x;
 
 /*
  * Use Handlebars for templating
@@ -15,6 +16,9 @@ var hbs;
 
 // For gzip compression
 app.use(express.compress());
+
+// Handle http post
+app.use(express.bodyParser());
 
 /*
  * Config for Production and Development
@@ -51,20 +55,41 @@ if (process.env.NODE_ENV === 'production') {
 // Set Handlebars
 app.set('view engine', 'handlebars');
 
-
+/*
+* Sessions
+*/
+app.use(express.cookieParser());
+app.use(express.session({secret: 'asd7bjuw3mbd8873bbhdkj2384'}));
 
 /*
  * Routes
  */
 // Index Page
-app.get('/', function(request, response, next) {
-    response.render('index');
+app.get('/', function(req, res, next) {
+    var auth = require('./lib/auth')(req.session);
+    console.log(auth.loggedIn() ? auth.userName() : "not logged in");
+    res.render('index');
 });
 
-app.get('/register', function(request, response, next) {
-    response.render('register');
+
+app.get('/register', function(req, res, next) {
+    res.render('register');
 });
 
+app.post('/doSignUp', function(req, res, next) {
+    var auth = require('./lib/auth')(req.session);
+    auth.signUp(req, 
+        function(){
+            console.log(auth.loggedIn() ? auth.userName() : "not logged in");
+            res.render('index');
+        },
+        function(e){
+            console.log('ERROR: ' + e);
+            res.render('register', {
+                error: e
+            });
+        });
+});
 
 /*
  * Start it up

@@ -106,11 +106,11 @@ module.exports = function (grunt) {
         open: {
             site: {
                 path: 'http://localhost:3000',
-                app: 'Google Chrome'
+                app: 'C:/Program Files/Google/Chrome/Application/chrome.exe'
             },
             editor: {
                 path: './',
-                app: 'Sublime Text 2'
+                app: 'C:/Program Files/Sublime Text 3/sublime_text.exe'
             },
         },
 
