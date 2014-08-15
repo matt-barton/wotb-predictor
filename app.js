@@ -8,6 +8,11 @@ var app = express();
 var port = 3000;
 
 /*
+* Dependencies
+*/
+var pages = require('./lib/pages');
+
+/*
  * Use Handlebars for templating
  */
 var exphbs = require('express3-handlebars');
@@ -60,34 +65,43 @@ app.set('view engine', 'handlebars');
 app.use(express.cookieParser());
 app.use(express.session({secret: 'asd7bjuw3mbd8873bbhdkj2384'}));
 
-/*
+/* 
  * Routes
  */
-// Index Page
-app.get('/', function(req, res, next) {
-    var auth = require('./lib/auth')(req.session);
-    console.log(auth.loggedIn() ? auth.userName() : "not logged in");
-    res.render('index');
+app.get('/', function(request, response, next) {
+    var auth = require('./lib/auth')(request.session);
+    pages.index(response, auth, {});
 });
 
-
-app.get('/register', function(req, res, next) {
-    res.render('register');
+app.get('/register', function(request, response, next) {
+    pages.register(response);
 });
 
-app.post('/doSignUp', function(req, res, next) {
-    var auth = require('./lib/auth')(req.session);
-    auth.signUp(req, 
+app.post('/doSignUp', function(request, response, next) {
+    var auth = require('./lib/auth')(request.session);
+    auth.signUp(
+        request.body, 
         function(){
-            console.log(auth.loggedIn() ? auth.userName() : "not logged in");
-            res.render('index');
+            pages.index(response, auth, {});
         },
         function(e){
             console.log('ERROR: ' + e);
-            res.render('register', {
+            pages.register(response, {
                 error: e
             });
         });
+});
+
+app.post('/login', function(request, response, next){
+    var auth = require('./lib/auth')(request.session);
+    auth.login(
+        request.body,
+        function(){
+            pages.index(response, auth, {});
+        },
+        function(e){
+        }
+    );
 });
 
 /*

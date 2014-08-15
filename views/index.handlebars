@@ -1,5 +1,9 @@
 <div class="container">
 
+	{{#if auth.loggedIn}}
+		Hello {{auth.userName}}!
+	{{/if}}
+
     <h1>Your Node Express App</h1>
 
     <a href="/login">Log In</a>
