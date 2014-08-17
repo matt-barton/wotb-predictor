@@ -127,6 +127,13 @@ app.post('/login', function(request, response, next){
     );
 });
 
+app.get('/signOut', function(request, response, next){
+    var auth = require('./lib/auth')(db, request.session);
+    auth.signOut(function(){
+        pages.indexRedirect(response);
+    });
+});
+
 /*
  * Start it up
  */
