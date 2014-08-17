@@ -3,6 +3,9 @@
 	{{#if auth.loggedIn}}
 		Hello {{auth.userName}}!
 		<a href="/signOut">Sign Out</a>
+		{{#if auth.admin}}
+			<a href="/admin">Admin Tools</a>
+		{{/if}}
 	{{else}}
 	    <a href="/register">Register</a>
 		<form action="/signIn" method="post">
