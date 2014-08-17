@@ -7,8 +7,14 @@ var express = require('express');
 var app = express();
 var port = 3000;
 
+/* 
+* Database
+*/
+var cradle = require('cradle');
+var db = new(cradle.Connection)().database('wotb-predictor');
+
 /*
-* Dependencies
+* Libraries
 */
 var pages = require('./lib/pages');
 
@@ -69,7 +75,7 @@ app.use(express.session({secret: 'asd7bjuw3mbd8873bbhdkj2384'}));
  * Routes
  */
 app.get('/', function(request, response, next) {
-    var auth = require('./lib/auth')(request.session);
+    var auth = require('./lib/auth')(db, request.session);
     pages.index(response, auth, {});
 });
 
@@ -78,22 +84,39 @@ app.get('/register', function(request, response, next) {
 });
 
 app.post('/doSignUp', function(request, response, next) {
-    var auth = require('./lib/auth')(request.session);
+    var auth = require('./lib/auth')(db, request.session);
     auth.signUp(
         request.body, 
         function(){
-            pages.index(response, auth, {});
+            pages.indexRedirect(response);
         },
         function(e){
-            console.log('ERROR: ' + e);
+            console.log('\nERROR\n');
+            console.log(e);
             pages.register(response, {
                 error: e
             });
         });
 });
 
+app.post('/signIn', function(request, response){
+    var auth = require('./lib/auth')(db, request.session);
+    auth.signIn(
+        request.body,
+        function(){
+            pages.indexRedirect(response);
+        },
+        function(e){
+            console.log('\nERROR\n');
+            console.log(e);
+            pages.index(response, auth, {
+                loginError: e
+            });
+        });
+});
+
 app.post('/login', function(request, response, next){
-    var auth = require('./lib/auth')(request.session);
+    var auth = require('./lib/auth')(db, request.session);
     auth.login(
         request.body,
         function(){

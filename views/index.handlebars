@@ -2,11 +2,18 @@
 
 	{{#if auth.loggedIn}}
 		Hello {{auth.userName}}!
+	{{else}}
+	    <a href="/register">Register</a>
+		<form action="/signIn" method="post">
+			<label>Username</label>
+			<input name="userName" id="userName" type="text" class="text-input" placeholder="username"/>
+			<label>Password</label>
+			<input name="password" id="password" type="password" class="text-input" placeholder="password"/>
+			{{loginError}}
+			<input type="submit" value="Go" />
+		</form>
 	{{/if}}
 
     <h1>Your Node Express App</h1>
 
-    <a href="/login">Log In</a>
-    <a href="/register">Register</a>
-    
 </div>
