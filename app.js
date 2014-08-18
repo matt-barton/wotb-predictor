@@ -10,8 +10,10 @@ var port = 3000;
 /* 
 * Database
 */
+var config = require('./config.json');
 var cradle = require('cradle');
-var db = new(cradle.Connection)().database('wotb-predictor');
+var db = new(cradle.Connection)(config.couch.host, config.couch.port, config.couch.options)
+    .database(config.couch.db);
 
 /*
 * Libraries
