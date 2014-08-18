@@ -3,7 +3,7 @@ module.exports = {
 
   views: {
 
-    byUserName: {
+    byUsername: {
 
       map: function(doc) {
         if (doc.type && doc.type == 'user' && !doc.disabled) {
@@ -11,7 +11,7 @@ module.exports = {
         }
       },
 
-      reduce: function(){}
+      reduce: null
     }
 
   }
