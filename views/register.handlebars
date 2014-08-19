@@ -28,4 +28,25 @@
         {{error}}
         <input type="submit" value="Submit" />
     </form>
+
+    <script>
+    $(document).ready(function() {
+        $('#username').on('keydown', function() {
+            $('.auto-image', $(this).parent()).remove();
+        });
+
+        $('#username').on('blur', function() {
+            var username = $(this);
+            $.getJSON('/jsonCheckUserName', {
+                username: username.val()
+            }, function(result){
+                var src = '/images/' + (result.valid ? 'green-tick.png' : 'error.png');
+                var title = result.valid ? 'Username OK.' : 'Username is already in use.';
+                username
+                    .parent()
+                    .append('<img class="auto-image" src="' + src + '" title="' + title + '" style="vertical-align: middle" />');
+            });
+        });
+    });
+    </script>
 </div>
