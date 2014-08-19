@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "preinstall": "npm install -g bower"
+  },
   "name": "wotb-predictor",
   "version": "0.0.1",
   "private": true,

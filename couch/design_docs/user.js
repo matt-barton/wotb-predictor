@@ -7,7 +7,7 @@ module.exports = {
 
       map: function(doc) {
         if (doc.type && doc.type == 'user' && !doc.disabled) {
-          emit(doc.username, doc);
+          emit(doc.username.toLowerCase(), doc);
         }
       },
 

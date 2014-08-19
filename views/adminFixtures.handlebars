@@ -1,0 +1,19 @@
+<h1>Fixtures Adminisatration</h1>
+
+Current Game: <input type="text" value="{{currentSeason.name}}" name="season.name" />
+
+{{#each currentSeason.miniseasons}}
+<div class="season">
+	<h2>{{name}}</h2>
+	<div>
+		<label>Deadline</label>
+		<input type="text" class="miniseason-deadline" name="{{htmlId}}Deadline" id="{{htmlId}}Deadline" value="{{deadline}}" />
+	</div>
+</div>
+{{/each}}
+
+<script>
+	$(document).ready(function(){
+		$('.miniseason-deadline').datepicker();
+	});
+</script>

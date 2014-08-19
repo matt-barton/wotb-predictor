@@ -132,7 +132,7 @@ app.post('/doSignUp', function(request, response, next) {
 
 app.post('/signIn', function(request, response){
     var auth = require('./lib/auth')(db, request.session);
-    auth.signIn(
+    auth.signIn( 
         request.body,
         function(){
             if (request.body.rememberMe) {
@@ -173,6 +173,21 @@ app.get('/signOut', function(request, response, next){
         response.clearCookie('autologin');
         pages.indexRedirect(response);
     });
+});
+
+app.get('/admin', function(request, response, next) {
+    var auth = require('./lib/auth')(db, request.session);
+    pages.admin.index(response, auth, {});
+});
+
+app.get('/admin-fixtures', function(request, response, next) {
+    var auth = require('./lib/auth')(db, request.session);
+    pages.admin.fixtures(response, auth, db, {});
+});
+
+app.get('/admin-report-predictions', function(request, response, next) {
+    var auth = require('./lib/auth')(db, request.session);
+    pages.admin.reports.predictions(response, auth, {});
 });
 
 /*
