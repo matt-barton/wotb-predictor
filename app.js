@@ -85,6 +85,19 @@ app.get('/register', function(request, response, next) {
     pages.register(response);
 });
 
+app.get('/jsonCheckUsername', function(request, response, next){
+    var auth = require('./lib/auth')(db, request.session);
+    response.setHeader('Content-Type', 'application/json');
+    if (request.query.username) {
+        return auth.usernameInUse(request.query.username, function(inUse){
+            response.end(JSON.stringify({
+                valid: !inUse
+            }));
+        });
+    }
+    response.end(JSON.stringify({error: 'Invalid parameters'}));
+});
+
 app.post('/doSignUp', function(request, response, next) {
     var auth = require('./lib/auth')(db, request.session);
     auth.signUp(
