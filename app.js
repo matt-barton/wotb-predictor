@@ -109,7 +109,8 @@ app.post('/doSignUp', function(request, response, next) {
             console.log('\nERROR\n');
             console.log(e);
             pages.register(response, {
-                error: e
+                error: e,
+                username: request.body.username
             });
         });
 });

@@ -14,7 +14,7 @@
         <ul class="form-fields">
         	<li>
         		<label>Wroth Username</label>
-        		<input name="username" id="username" type="text" class="text-input" placeholder="username"/>
+        		<input name="username" id="username" type="text" class="text-input" placeholder="username" value="{{username}}"/>
         	</li>
         	<li>
         		<label>Password</label>
@@ -31,12 +31,13 @@
 
     <script>
     $(document).ready(function() {
-        $('#username').on('keydown', function() {
+        var username = $('#username');
+
+        username.on('keydown', function() {
             $('.auto-image', $(this).parent()).remove();
         });
 
-        $('#username').on('blur', function() {
-            var username = $(this);
+        username.on('blur', function() {
             $.getJSON('/jsonCheckUserName', {
                 username: username.val()
             }, function(result){
@@ -47,6 +48,8 @@
                     .append('<img class="auto-image" src="' + src + '" title="' + title + '" style="vertical-align: middle" />');
             });
         });
+
+        if (username.val()) username.blur();
     });
     </script>
 </div>
