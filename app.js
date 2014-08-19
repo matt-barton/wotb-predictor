@@ -126,7 +126,8 @@ app.post('/signIn', function(request, response){
             console.log('\nERROR\n');
             console.log(e);
             pages.index(response, auth, {
-                loginError: e
+                loginError: e,
+                username: request.body.username
             });
         });
 });
