@@ -70,7 +70,7 @@ app.set('view engine', 'handlebars');
 /*
 * Sessions
 */
-app.use(express.cookieParser());
+app.use(express.cookieParser('qwer2435wtrgsfdb4323454235'));
 app.use(express.session({secret: 'asd7bjuw3mbd8873bbhdkj2384'}));
 
 /* 
@@ -78,7 +78,22 @@ app.use(express.session({secret: 'asd7bjuw3mbd8873bbhdkj2384'}));
  */
 app.get('/', function(request, response, next) {
     var auth = require('./lib/auth')(db, request.session);
-    pages.index(response, auth, {});
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        auth.doAutoLogin(request.cookies.autologin, function(e) {
+            pages.index(response, auth, {});
+        }, function(e) {
+            console.log('\nERROR\n');
+            console.log(e);
+            response.clearCookie('autologin');
+            pages.index(response, auth, {
+                loginError: e,
+                username: request.body.username
+            });
+        });
+    }
+    else {
+        pages.index(response, auth, {});
+    }
 });
 
 app.get('/register', function(request, response, next) {
@@ -120,7 +135,15 @@ app.post('/signIn', function(request, response){
     auth.signIn(
         request.body,
         function(){
-            pages.indexRedirect(response);
+            if (request.body.rememberMe) {
+                auth.setLoginCookie(request.body, response, function(){
+                    pages.indexRedirect(response);
+                });
+            }
+            else {
+                pages.indexRedirect(response);
+            }
+
         },
         function(e){
             console.log('\nERROR\n');
@@ -147,6 +170,7 @@ app.post('/login', function(request, response, next){
 app.get('/signOut', function(request, response, next){
     var auth = require('./lib/auth')(db, request.session);
     auth.signOut(function(){
+        response.clearCookie('autologin');
         pages.indexRedirect(response);
     });
 });

@@ -9,12 +9,20 @@
 	{{else}}
 	    <a href="/register">Register</a>
 		<form action="/signIn" method="post">
-			<label>Username</label>
-			<input name="username" id="username" type="text" class="text-input" placeholder="username" value="{{username}}" />
-			<label>Password</label>
-			<input name="password" id="password" type="password" class="text-input" placeholder="password"/>
-			{{loginError}}
+			<div>
+				<label>Username</label>
+				<input name="username" id="username" type="text" class="text-input" placeholder="username" value="{{username}}" />
+			</div>
+			<div>
+				<label>Password</label>
+				<input name="password" id="password" type="password" class="text-input" placeholder="password"/>
+			</div>
+			<div>
+				<label>Remember Me</label>
+				<input name="rememberMe" id="rememberMe" type="checkbox" class="text-input" />
+			</div>
 			<input type="submit" value="Go" />
+			<div class="warning">{{loginError}}</div>
 		</form>
 	{{/if}}
 
