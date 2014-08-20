@@ -163,6 +163,9 @@ app.post('/login', function(request, response, next){
             pages.index(response, auth, {});
         },
         function(e){
+            console.log('\nERROR\n');
+            console.log(e);
+            pages.index(response, auth, {});
         }
     );
 });
@@ -183,6 +186,27 @@ app.get('/admin', function(request, response, next) {
 app.get('/admin-fixtures', function(request, response, next) {
     var auth = require('./lib/auth')(db, request.session);
     pages.admin.fixtures(response, auth, db, {});
+});
+
+app.post('/saveFixtures', function(request, response, next){
+    var auth = require('./lib/auth')(db, request.session);
+    if (auth.loggedIn() && auth.isAdmin()) {
+        var fixtures = require('./lib/fixtures')(db);
+        fixtures.saveSeason(request.body, function(e) {
+            console.log('\nERROR\n');
+            console.log(e);
+            pages.admin.fixtures(response, auth, db, {
+                error: e
+            });
+        }, function() {
+            pages.admin.fixtures(response, auth, db, {
+                message: 'Game details saved.'
+            });
+        });
+    }
+    else {
+        pages.indexRedirect(response);
+    }
 });
 
 app.get('/admin-report-predictions', function(request, response, next) {
