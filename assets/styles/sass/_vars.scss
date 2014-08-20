@@ -18,7 +18,7 @@
  * using your own, so you can completely modify how inuit.css works without ever
  * having to alter the framework itself.
  */
-
+$push:  true;
 
 
 
@@ -32,16 +32,16 @@
  * and introducing objects and abstractions is as simple as switching the
  * following variables to `true`.
  */
-$use-grids:         false;
+$use-grids:         true;
 $use-flexbox:       false;
-$use-columns:       false;
-$use-nav:           false;
+$use-columns:       true;
+$use-nav:           true;
 $use-options:       false;
 $use-pagination:    false;
 $use-breadcrumb:    false;
 $use-media:         false;
 $use-marginalia:    false;
-$use-island:        false;
+$use-island:        true;
 $use-block-list:    false;
 $use-matrix:        false;
 $use-split:         false;
@@ -51,9 +51,9 @@ $use-flyout:        false;
 $use-arrows:        false;
 $use-sprite:        false;
 $use-icon-text:     false;
-$use-beautons:      false;
+$use-beautons:      true;
 $use-lozenges:      false;
-$use-rules:         false;
+$use-rules:         true;
 $use-stats:         false;
 $use-greybox:       false;
 
@@ -102,10 +102,10 @@ label{ cursor:default !important; }
  * ^COLORS 
  */
 $color1:            $brand-color;           // red
-$color2:            #2F7DC4;                // blue
-$color2--dark:      darken($color2, 14%);   // dark blue
-$color2--light:     lighten($color2, 8%);   // light blue
-$color3:            #6CBA16;                // green
+$color2:            #A6F283;                // green
+$color3:            #2F7DC4;                // blue
+$color3--dark:      darken($color2, 14%);   // dark blue
+$color3--light:     lighten($color2, 8%);   // light blue
 $color4:            #FFA501;                // orange
 $color5:            #8A2CA1;                // orange
 

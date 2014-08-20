@@ -1,19 +1,78 @@
-<h1>Fixtures Adminisatration</h1>
+<form action"/saveFixtures" method="post">
+	<span class="alpha">Fixtures Adminisatration</span>
 
-Current Game: <input type="text" value="{{currentSeason.name}}" name="season.name" />
-
-{{#each currentSeason.miniseasons}}
-<div class="season">
-	<h2>{{name}}</h2>
-	<div>
-		<label>Deadline</label>
-		<input type="text" class="miniseason-deadline" name="{{htmlId}}Deadline" id="{{htmlId}}Deadline" value="{{deadline}}" />
+	<div  class="float--right">
+		<button type="submit" class="btn btn--negative">Save Details</button>
 	</div>
-</div>
-{{/each}}
+
+	<div id="first" class="grid page-block eleven-twelfths">
+		<div class="grid__item one-whole">
+			<span class="delta">Current Game</span>
+		</div><!--
+	 --><div class="grid__item one-quarter">
+	 		Name
+	 	</div><!--
+	  --><div class="grid__item one-quarter">
+			<input type="text" value="{{currentSeason.name}}" name="season.name" />
+		</div>
+	</div>
+
+	{{#each currentSeason.miniseasons}}
+	<div class="grid page-block eleven-twelfths">
+		<div class="grid__item one-whole">
+			<span class="delta">{{name}}</span>
+		</div><!--
+	 --><div class="grid__item one-third">
+			<span class="Epsilon">Predictions Deadline</span>
+		</div><!--
+	 --><div class="grid__item two-thirds">
+			<input type="text" class="miniseason-deadline text-input" name="{{htmlId}}Deadline" id="{{htmlId}}Deadline" value="{{deadline}}" />
+		</div><!--
+	 --><div class="grid__item one-third">
+			<span class="epsilon">Fixtures</span>
+		</div><!--
+	 --><div class="grid__item two-thirds">
+			<div class="grid" id="{{htmlId}}FixturesGrid"><!--
+				{{#each fixtures}}
+			 --><div class="grid__item one-half">
+					<input type="text" name="" class="fixture-team input-text" />
+				</div><!--
+			 --><div class="grid__item one-half">
+					<input type="text" class="fixture-date text-input" id="newFixtureDate" />
+				</div><!--
+				{{/each}}
+		 --></div>
+		</div><!--
+	 --><div class="grid__item one-third">
+			<span class="epsilon">Team</span><br/>
+			<input type="text" size="12" class="fixture-team text-input" id="newFixtureTeam" placeholder="team name" />
+		</div><!--
+	 --><div class="grid__item one-sixth">
+			<span class="epsilon">Home/Away</span><br/>
+			<select>
+				<option></option>
+				<option>H</option>
+				<option>A</option>
+			</select>
+		</div><!--
+	 --><div class="grid__item one-third">
+			<span class="epsilon">Fixture Date</span><br/>
+			<input type="text" size="12" class="fixture-date text-input" id="newFixtureDate" placeholder="dd/mm/yyyy" />
+		</div><!--
+	 --><div class="grid__item one-eighth left bottom">
+			<button class="btn btn--small btn--positive" onclick="alert('create new fixture');">Add</button>
+		</div>
+	</div>
+	{{/each}}
+
+	<div>
+		<button type="submit" class="btn btn--negative">Save Details</button>
+	</div>
+</form>
 
 <script>
 	$(document).ready(function(){
 		$('.miniseason-deadline').datepicker();
+		$('.fixture-date').datepicker();
 	});
 </script>
