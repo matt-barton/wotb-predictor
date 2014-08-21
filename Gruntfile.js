@@ -34,7 +34,12 @@ module.exports = function (grunt) {
                 ],
             },
             express: {
-                files:  [ 'app.js', '!**/node_modules/**', '!Gruntfile.js', 'lib/**/*.js' ],
+                files:  [ 
+                    'app.js', 
+                    '!**/node_modules/**', 
+                    '!Gruntfile.js', 
+                    'lib/**/*.js', 
+                    'app.config.json' ],
                 tasks:  [ 'express:dev' ],
                 options: {
                     nospawn: true // Without this option specified express won't be reloaded
@@ -254,7 +259,6 @@ module.exports = function (grunt) {
     // Register Tasks
     // Workon
     grunt.registerTask('workon', 'Start working on this project.', [
-        'jshint',
         'sass:dev',
         'express:dev',
         'watch'

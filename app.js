@@ -10,10 +10,10 @@ var port = 3000;
 /* 
 * Database
 */
-var config = require('./config.json');
+var dbConfig = require('./db.config.json');
 var cradle = require('cradle');
-var db = new(cradle.Connection)(config.couch.host, config.couch.port, config.couch.options)
-    .database(config.couch.db);
+var db = new(cradle.Connection)(dbConfig.couch.host, dbConfig.couch.port, dbConfig.couch.options)
+    .database(dbConfig.couch.db);
 
 /*
 * Libraries
