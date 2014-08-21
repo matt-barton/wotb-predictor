@@ -6,8 +6,9 @@
 var express = require('express');
 var app = express();
 var port = 3000;
+var bodyParser = require('body-parser');
 
-/* 
+/*
 * Database
 */
 var dbConfig = require('./db.config.json');
@@ -30,7 +31,9 @@ var hbs;
 app.use(express.compress());
 
 // Handle http post
-app.use(express.bodyParser());
+var formidable = require('formidable');
+app.use(bodyParser.urlencoded());
+app.use(express.urlencoded());
 
 /*
  * Config for Production and Development
@@ -192,6 +195,24 @@ app.post('/saveFixtures', function(request, response, next){
     var auth = require('./lib/auth')(db, request.session);
     if (auth.loggedIn() && auth.isAdmin()) {
         var fixtures = require('./lib/fixtures')(db);
+
+        var form = new formidable.IncomingForm();
+        console.log(form);
+
+        form.parse(request, function(err, fields, files){
+            console.log('here');
+            console.log(e);
+            console.log({fields : fields});
+        });
+
+        form.on('field', function(name, value) {
+            console.log({name: name, value: value});
+        });
+        
+        pages.admin.fixtures(response, auth, db, {
+                message: 'Game details saved.'
+            });
+        /*
         fixtures.saveSeason(request.body, function(e) {
             console.log('\nERROR\n');
             console.log(e);
@@ -203,6 +224,7 @@ app.post('/saveFixtures', function(request, response, next){
                 message: 'Game details saved.'
             });
         });
+*/
     }
     else {
         pages.indexRedirect(response);

@@ -32,35 +32,45 @@
 			<span class="epsilon">Fixtures</span>
 		</div><!--
 	 --><div class="grid__item two-thirds">
-			<div class="grid" id="{{htmlId}}FixturesGrid"><!--
+			<div class="grid" id="{{htmlId}}_fixtures-grid"><!--
 				{{#each fixtures}}
-			 --><div class="grid__item one-half">
-					<input type="text" name="" class="fixture-team input-text" />
+			 --><div class="grid__item three-eighths">
+					<input type="text" name="{{htmlId}}FixtureTeam[{{fixtureHtmlId}}]" class="fixture-team input-text" size="12" />
 				</div><!--
-			 --><div class="grid__item one-half">
-					<input type="text" class="fixture-date text-input" id="newFixtureDate" />
+			 --><div class="grid__item two-eigthts">
+					<select name="{{htmlId}}_fixture-venue[{{fixtureHtmlId}}]" class="fixture-venue">
+						<option></option>
+						<option>H</option>
+						<option>A</option>
+					</select>
+				</div><!--
+			 --><div class="grid__item three-eigthts">
+					<input type="text" name="{{htmlId}}_fixture-date[{{fixtureHtmlId}}]" class="fixture-date text-input" id="newFixtureDate" size="12" />
 				</div><!--
 				{{/each}}
 		 --></div>
 		</div><!--
+	 --><div class="grid__item one-whole">
+	 		<hr class="">
+	 	</div><!--
 	 --><div class="grid__item one-third">
-			<span class="epsilon">Team</span><br/>
-			<input type="text" size="12" class="fixture-team text-input" id="newFixtureTeam" placeholder="team name" />
+			<label class="epsilon">Team</label>
+			<input type="text" size="12" class="fixture-team new-fixture-input text-input" id="{{htmlId}}_add-fixture-team" placeholder="team name" />
 		</div><!--
 	 --><div class="grid__item one-sixth">
-			<span class="epsilon">Home/Away</span><br/>
-			<select>
+			<label class="epsilon">Home/Away</label>
+			<select id="{{htmlId}}_add-fixture-venue" class="new-fixture-input">
 				<option></option>
 				<option>H</option>
 				<option>A</option>
 			</select>
 		</div><!--
 	 --><div class="grid__item one-third">
-			<span class="epsilon">Fixture Date</span><br/>
-			<input type="text" size="12" class="fixture-date text-input" id="newFixtureDate" placeholder="dd/mm/yyyy" />
+			<label class="epsilon">Fixture Date</label>
+			<input type="text" size="12" class="fixture-date text-input new-fixture-input" id="{{htmlId}}_add-fixture-date" placeholder="dd/mm/yyyy" />
 		</div><!--
 	 --><div class="grid__item one-eighth left bottom">
-			<button class="btn btn--small btn--positive" onclick="alert('create new fixture');">Add</button>
+			<button type="button" id="{{htmlId}}_add-fixture-button" class="btn btn--small btn--positive wotb-add-fixture">Add</button>
 		</div>
 	</div>
 	{{/each}}
@@ -72,7 +82,88 @@
 
 <script>
 	$(document).ready(function(){
+
+		// date pickers
 		$('.miniseason-deadline').datepicker();
 		$('.fixture-date').datepicker();
+
+		// add fixture fields
+		var removeErrorClass = function (el) {
+			el.parent().removeClass('field-with-errors');
+		};
+
+		$('.new-fixture-input').keyup(function(){
+			removeErrorClass($(this));
+		});
+
+		$('.new-fixture-input').change(function(){
+			removeErrorClass($(this));
+		});
+
+		// add fixture buttons
+		$('.wotb-add-fixture').click(function(){
+			var miniSeasonId = $(this)
+				.attr('id')
+				.split('_')[0];
+
+			var fixtureDateField = $('#' + miniSeasonId + '_add-fixture-date');
+			var fixtureTeamField = $('#' + miniSeasonId + '_add-fixture-team');
+			var fixtureVenueField = $('#' + miniSeasonId + '_add-fixture-venue');
+			var fixtureDate = fixtureDateField.val();
+			var fixtureTeam = fixtureTeamField.val();
+			var fixtureVenue = fixtureVenueField.val();
+
+			if (!fixtureDate || !fixtureTeam || !fixtureVenue) {
+				if (!fixtureDate) fixtureDateField.parent().addClass('field-with-errors');
+				if (!fixtureTeam) fixtureTeamField.parent().addClass('field-with-errors');
+				if (!fixtureVenue) fixtureVenueField.parent().addClass('field-with-errors');
+				return;
+			}
+
+			var fixturesDiv = $('#' + miniSeasonId + '_fixtures-grid');
+			var numberOfFixtures = $('.fixture-team', fixturesDiv).length;
+
+			var teamDiv = $('<div class="grid__item three-eighths">')
+					.css('display', 'none')
+					.append($('<input type="text" />')
+						.attr('name', miniSeasonId + 'FixtureTeam[' + numberOfFixtures + ']')
+						.attr('size', 12)
+						.addClass('fixture-team')
+						.addClass('input-text')
+						.val(fixtureTeam));
+			var venueDiv = $('<div class="grid__item two-eighths">')
+					.css('display', 'none')
+					.append(
+						$('<select>')
+							.attr('name', miniSeasonId + '_fixture-venue[' + numberOfFixtures + ']')
+							.addClass('fixture-venue')
+							.append('<option' + (fixtureVenue == 'H' ? ' selected' : '') + '>H</option>')
+							.append('<option' + (fixtureVenue == 'A' ? ' selected' : '') + '>A</option>'));
+			var dateDiv = $('<div class="grid__item three-eighths">')
+					.css('display', 'none')
+					.append($('<input type="text" />')
+						.attr('name', miniSeasonId + '_fixture-date[' + numberOfFixtures + ']')
+						.attr('size', 12)
+						.addClass('fixture-date')
+						.addClass('input-text')
+						.val(fixtureDate)
+						.datepicker());
+
+			fixturesDiv
+				.append(teamDiv)
+				.append(venueDiv)
+				.append(dateDiv);
+
+			teamDiv.show('slow');
+			venueDiv.show('slow');
+			dateDiv.show('slow');
+
+			fixtureDateField.val('');
+			fixtureTeamField.val('');
+			fixtureVenueField.val('');
+
+		});
 	});
+
+
 </script>
