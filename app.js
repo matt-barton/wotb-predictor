@@ -196,16 +196,17 @@ app.post('/saveFixtures', function(request, response, next){
     var auth = require('./lib/auth')(db, request.session);
     if (auth.loggedIn() && auth.isAdmin()) {
         var fixtures = require('./lib/fixtures')(db);
+        response.setHeader('Content-Type', 'application/json');
         fixtures.saveSeason(request.body, function(e) {
             console.log('\nERROR\n');
             console.log(e);
-            pages.admin.fixtures(response, auth, db, {
+            response.end(JSON.stringify({
                 error: e
-            });
+            }));
         }, function() {
-            pages.admin.fixtures(response, auth, db, {
-                message: 'Game details saved.'
-            });
+            response.end(JSON.stringify({
+                results: 'OK'
+            }));
         });
     }
     else {
