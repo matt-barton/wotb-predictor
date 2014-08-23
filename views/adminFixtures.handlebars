@@ -45,7 +45,7 @@
 						</select>
 					</div><!--
 			 	--><div class="grid__item three-eighths">
-						<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-date" class="fixture-date text-input" id="newFixtureDate" size="12" value="{{date}}" />
+						<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-date" class="fixture-date text-input" id="newFixtureDate" size="12" value="{{date}}" readonly="readonly" />
 					</div><!--
 			 --></div><!--
 			 	{{else}}
@@ -72,7 +72,7 @@
 		</div><!--
 	 --><div class="grid__item one-third">
 			<label class="epsilon">Fixture Date</label>
-			<input type="text" size="12" class="fixture-date text-input new-fixture-input" id="{{miniseasonHtmlId}}_add-fixture-date" placeholder="dd/mm/yyyy" />
+			<input type="text" size="12" class="fixture-date text-input new-fixture-input" id="{{miniseasonHtmlId}}_add-fixture-date" placeholder="dd/mm/yyyy" readonly="readonly" />
 		</div><!--
 	 --><div class="grid__item one-eighth left bottom">
 			<button type="button" id="{{miniseasonHtmlId}}_add-fixture-button" class="btn btn--small btn--positive wotb-add-fixture">Add</button>
@@ -191,6 +191,7 @@
 					.append($('<input type="text" />')
 						.attr('id', miniSeasonId + '-' + numberOfFixtures + '-fixture-date')
 						.attr('size', 12)
+						.attr('readonly', 'readonly')
 						.addClass('fixture-date')
 						.addClass('input-text')
 						.val(fixtureDate)
