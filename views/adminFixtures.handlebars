@@ -1,4 +1,4 @@
-<!--<form action="/saveFixtures" method="post">-->
+
 	<span class="alpha">Fixtures Adminisatration</span>
 
 	<div  class="float--right">
@@ -40,8 +40,8 @@
 					</div><!--
 			 	--><div class="grid__item two-eighths">
 						<select id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-venue" class="fixture-venue">
-							<option>H</option>
-							<option>A</option>
+							<option{{#compare venue '==' 'H'}} selected{{/compare}}>H</option>
+							<option{{#compare venue '==' 'A'}} selected{{/compare}}>A</option>
 						</select>
 					</div><!--
 			 	--><div class="grid__item three-eighths">
@@ -83,7 +83,6 @@
 	<div>
 		<button type="button" class="btn btn--negative post-fixtures">Save Details</button>
 	</div>
-<!--</form>-->
 
 <script>
 	$(document).ready(function(){

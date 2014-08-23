@@ -25,7 +25,7 @@ var pages = require('./lib/pages');
  * Use Handlebars for templating
  */
 var exphbs = require('express3-handlebars');
-var hbs;
+var helpers = require('./lib/handlesbars-helpers.js')();
 
 // For gzip compression
 app.use(express.compress());
@@ -44,7 +44,8 @@ if (process.env.NODE_ENV === 'production') {
     app.engine('handlebars', exphbs({
         defaultLayout: 'main',
         layoutsDir: 'dist/views/layouts/',
-        partialsDir: 'dist/views/partials/'
+        partialsDir: 'dist/views/partials/',
+        helpers: helpers.all()
     }));
 
     // Locate the views
@@ -57,8 +58,9 @@ if (process.env.NODE_ENV === 'production') {
     app.engine('handlebars', exphbs({
         // Default Layout and locate layouts and partials
         defaultLayout: 'main',
-        layoutsDir: 'views/layouts/',
-        partialsDir: 'views/partials/'
+        layoutsDir: 'views/layouts/', 
+        partialsDir: 'views/partials/',
+        helpers: helpers.all()
     }));
 
     // Locate the views
@@ -74,8 +76,8 @@ app.set('view engine', 'handlebars');
 /*
 * Sessions
 */
-app.use(express.cookieParser('qwer2435wtrgsfdb4323454235'));
-app.use(express.session({secret: 'asd7bjuw3mbd8873bbhdkj2384'}));
+app.use(express.cookieParser('qDe!24X5wVrbsfda43^34%4£3&'));
+app.use(express.session({secret: 'asd7bjuw3mbd8x7£bbqdkj2!8^*p'}));
 
 /* 
  * Routes
