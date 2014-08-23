@@ -13,7 +13,7 @@
 	 		Name
 	 	</div><!--
 	  --><div class="grid__item one-quarter">
-			<input type="text" value="{{currentSeason.name}}" id="seasonName" />
+			<input type="text" value="{{currentSeason.name}}" id="seasonName" size="12" />
 		</div>
 	</div>
 
@@ -26,7 +26,7 @@
 			<span class="Epsilon">Predictions Deadline</span>
 		</div><!--
 	 --><div class="grid__item two-thirds">
-			<input type="text" class="miniseason-deadline text-input" id="{{miniseasonHtmlId}}-deadline" value="{{deadline}}" />
+			<input type="text" class="miniseason-deadline text-input" id="{{miniseasonHtmlId}}-deadline" value="{{deadline}}" size="12" />
 		</div><!--
 	 --><div class="grid__item one-third">
 			<span class="epsilon">Fixtures</span>
@@ -48,6 +48,10 @@
 						<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-date" class="fixture-date text-input" id="newFixtureDate" size="12" value="{{date}}" />
 					</div><!--
 			 --></div><!--
+			 	{{else}}
+			 --><div id="{{miniseasonHtmlId}}-no-fixtures-div" class="grid__item one-whole">
+			 		No fixtures yet.
+			 	</div><!--
 				{{/each}}
 		 --></div>
 		</div><!--
@@ -124,6 +128,39 @@
 				return;
 			}
 
+			var allFixtures = $('.fixture-block')
+			  , processedFixtures = 0
+			  , duplicate = false;
+
+			allFixtures.each(function(i, fixture){
+				if ($('.fixture-team', fixture).val() == fixtureTeam && $('.fixture-venue', fixture).val() == fixtureVenue) {
+					$.notify('Cannot add this fixture - duplicate team/fixture', {
+						className: 'error'
+					});
+					duplicate = true;
+				}
+
+				if ($('.fixture-date', fixture).val() == fixtureDate) {
+					$.notify('Cannot add this fixture - duplicate date', {
+						className: 'error'
+					});
+					return;
+					duplicate = true;
+				}
+				processedFixtures++;
+			});
+
+			var backstop = 0;
+			while(processedFixtures < allFixtures.length) {
+				backstop ++;
+				if (backstop > 1000) {
+					console.log('backstop prevents infinite loop')
+					return;
+				}
+			}
+
+			if (duplicate) return;
+
 			var fixturesDiv = $('#' + miniSeasonId + '-fixtures-grid');
 			var numberOfFixtures = $('.fixture-team', fixturesDiv).length;
 
@@ -159,6 +196,7 @@
 					.append(venueDiv)
 					.append(dateDiv));
 
+			$('#' + miniSeasonId + '-no-fixtures-div').hide();
 			teamDiv.show('slow');
 			venueDiv.show('slow');
 			dateDiv.show('slow');
