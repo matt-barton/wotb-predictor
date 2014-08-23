@@ -160,6 +160,13 @@
 
 			if (duplicate) return;
 
+			if (Date.parse(fixtureDate) < Date.now()) {
+				$.notify('Cannot add this fixture - date in the past', {
+					className: 'error'
+				});
+				return;
+			}
+
 			var fixturesDiv = $('#' + miniSeasonId + '-fixtures-grid');
 			var numberOfFixtures = $('.fixture-team', fixturesDiv).length;
 
