@@ -286,15 +286,37 @@
 				});
 			});
 
-			var button = $(this);
-			$.post('/saveFixtures', season, function(result){
-				if (result.error) {
-					$.notify(result.error, 'warn');
+			$.blockUI({
+				css: { 
+		            border: 'none', 
+		            padding: '15px', 
+		            backgroundColor: '#000', 
+		            '-webkit-border-radius': '10px', 
+		            '-moz-border-radius': '10px', 
+		            opacity: .5, 
+		            color: '#fff' 
+        		}
+        	});
+
+			$.ajax({
+				type: 'post',
+				url: '/saveFixtures',
+				data: season,
+				dataType: 'json',
+				success: function(result){
+					$.unblockUI();
+					if (result.error) {
+						$.notify(result.error, 'warn');
+					}
+					else {
+						$.notify('Fixtures saved.', 'success');
+					}
+				},
+				error: function(jqXHR, status, error){
+					$.unblockUI();
+					$.notify('Cannot save results. There was an error.', 'warn');
 				}
-				else {
-					$.notify('Fixtures saved.', 'success');
-				}
-			}, 'json');
+			});
 		});
 	});
 
