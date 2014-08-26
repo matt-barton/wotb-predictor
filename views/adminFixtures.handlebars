@@ -36,16 +36,16 @@
 				{{#each fixtures}}
 			 --><div class="fixture-block"><!--
 			 	 --><div class="grid__item three-eighths">
-						<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-team" class="fixture-team input-text" size="12" value="{{team}}" />
+						<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-team" class="fixture-team input-text fixture-input" size="12" value="{{team}}" />
 					</div><!--
 			 	--><div class="grid__item two-eighths">
-						<select id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-venue" class="fixture-venue">
+						<select id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-venue" class="fixture-venue fixture-input">
 							<option{{#compare venue '==' 'H'}} selected{{/compare}}>H</option>
 							<option{{#compare venue '==' 'A'}} selected{{/compare}}>A</option>
 						</select>
 					</div><!--
 			 	--><div class="grid__item three-eighths">
-						<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-date" class="fixture-date text-input" id="newFixtureDate" size="12" value="{{date}}" readonly="readonly" />
+						<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-date" class="fixture-date fixture-input text-input" id="newFixtureDate" size="12" value="{{date}}" readonly="readonly" />
 					</div><!--
 			 --></div><!--
 			 	{{else}}
@@ -60,11 +60,11 @@
 	 	</div><!--
 	 --><div class="grid__item one-third">
 			<label class="epsilon">Team</label>
-			<input type="text" size="12" class="fixture-team new-fixture-input text-input" id="{{miniseasonHtmlId}}_add-fixture-team" placeholder="team name" />
+			<input type="text" size="12" class="fixture-team fixture-input text-input" id="{{miniseasonHtmlId}}_add-fixture-team" placeholder="team name" />
 		</div><!--
 	 --><div class="grid__item one-sixth">
 			<label class="epsilon">Home/Away</label>
-			<select id="{{miniseasonHtmlId}}_add-fixture-venue" class="new-fixture-input">
+			<select id="{{miniseasonHtmlId}}_add-fixture-venue" class="fixture-input">
 				<option></option>
 				<option>H</option>
 				<option>A</option>
@@ -72,7 +72,7 @@
 		</div><!--
 	 --><div class="grid__item one-third">
 			<label class="epsilon">Fixture Date</label>
-			<input type="text" size="12" class="fixture-date text-input new-fixture-input" id="{{miniseasonHtmlId}}_add-fixture-date" placeholder="dd/mm/yyyy" readonly="readonly" />
+			<input type="text" size="12" class="fixture-date text-input fixture-input" id="{{miniseasonHtmlId}}_add-fixture-date" placeholder="dd/mm/yyyy" readonly="readonly" />
 		</div><!--
 	 --><div class="grid__item one-eighth left bottom">
 			<button type="button" id="{{miniseasonHtmlId}}_add-fixture-button" class="btn btn--small btn--positive wotb-add-fixture">Add</button>
@@ -96,11 +96,11 @@
 			el.parent().removeClass('field-with-errors');
 		};
 
-		$('.new-fixture-input').keyup(function(){
+		$('.fixture-input').keyup(function(){
 			removeErrorClass($(this));
 		});
 
-		$('.new-fixture-input').change(function(){
+		$('.fixture-input').change(function(){
 			removeErrorClass($(this));
 		});
 
@@ -177,13 +177,15 @@
 						.attr('size', 12)
 						.addClass('fixture-team')
 						.addClass('input-text')
-						.val(fixtureTeam));
+						.addClass('fixture-input')
+					.val(fixtureTeam));
 			var venueDiv = $('<div class="grid__item two-eighths">')
 					.css('display', 'none')
 					.append(
 						$('<select>')
 							.attr('id', miniSeasonId + '-' + numberOfFixtures + '-fixture-venue')
 							.addClass('fixture-venue')
+							.addClass('fixture-input')
 							.append('<option' + (fixtureVenue == 'H' ? ' selected' : '') + '>H</option>')
 							.append('<option' + (fixtureVenue == 'A' ? ' selected' : '') + '>A</option>'));
 			var dateDiv = $('<div class="grid__item three-eighths">')
@@ -193,6 +195,7 @@
 						.attr('size', 12)
 						.attr('readonly', 'readonly')
 						.addClass('fixture-date')
+						.addClass('fixture-input')
 						.addClass('input-text')
 						.val(fixtureDate)
 						.datepicker());
@@ -215,10 +218,59 @@
 		});
 
 		$('.post-fixtures').click(function(){
+			$('.fixture-input').parent().removeClass('field-with-errors');
+
 			var season = {
 				name: $('#seasonName').val(),
 				miniseasons: []
 			};
+
+			var ok = true;
+			var allFixtures = $('.fixture-block');
+			var rowsWithErrors = [];
+
+			for(var x=0; x<allFixtures.length; x++) {
+				if (rowsWithErrors.indexOf(x) >= 0) continue;
+				var team  = $('.fixture-team', allFixtures[x]).val()
+				  , date  = $('.fixture-date', allFixtures[x]).val()
+				  , venue = $('.fixture-venue', allFixtures[x]).val();
+
+				for(var y=0; y<allFixtures.length; y++) {
+					if (rowsWithErrors.indexOf(y) >= 0) continue;
+					if (x==y) continue;
+
+					if ($('.fixture-team', allFixtures[y]).val() == team && 
+						$('.fixture-venue', allFixtures[y]).val() == venue) {
+						$.notify('Cannot save fixtures - team/venue duplicate', {
+							className: 'error'
+						});
+
+						$('.fixture-team', allFixtures[y]).parent().addClass('field-with-errors');
+						$('.fixture-venue', allFixtures[y]).parent().addClass('field-with-errors');
+						$('.fixture-team', allFixtures[x]).parent().addClass('field-with-errors');
+						$('.fixture-venue', allFixtures[x]).parent().addClass('field-with-errors');
+
+						ok = false;
+						if(!rowsWithErrors.indexOf(x)) rowsWithErrors.push(x);
+						if(!rowsWithErrors.indexOf(y)) rowsWithErrors.push(y);
+					}
+
+					if ($('.fixture-date', allFixtures[y]).val() == date) {
+						$.notify('Cannot save fixtures - duplicate date', {
+							className: 'error'
+						});
+
+						$('.fixture-date', allFixtures[y]).parent().addClass('field-with-errors');
+						$('.fixture-date', allFixtures[x]).parent().addClass('field-with-errors');
+
+						ok = false;
+						if(!rowsWithErrors.indexOf(x)) rowsWithErrors.push(x);
+						if(!rowsWithErrors.indexOf(y)) rowsWithErrors.push(y);
+					}
+				}
+			}
+
+			if (!ok) return;
 
 			$('.season-block').each(function(i, miniSeasonDiv){
 				season.miniseasons[i] = {
