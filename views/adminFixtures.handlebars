@@ -132,7 +132,7 @@
 			  , duplicate = false;
 
 			allFixtures.each(function(i, fixture){
-				if ($('.fixture-team', fixture).val() == fixtureTeam && $('.fixture-venue', fixture).val() == fixtureVenue) {
+				if ($('.fixture-team', fixture).val().toLowerCase() == fixtureTeam.toLowerCase() && $('.fixture-venue', fixture).val() == fixtureVenue) {
 					$.notify('Cannot add this fixture - duplicate team/fixture', {
 						className: 'error'
 					});
@@ -250,14 +250,14 @@
 					$.notify('Cannot save fixtures - date is in the past', {
 						className: 'error'
 					});
-					return;
+					ok = false;
 				}
 
 				for(var y=0; y<allFixtures.length; y++) {
 					if (rowsWithErrors.indexOf(y) >= 0) continue;
 					if (x==y) continue;
 
-					if ($('.fixture-team', allFixtures[y]).val() == team && 
+					if ($('.fixture-team', allFixtures[y]).val().toLowerCase() == team.toLowerCase() && 
 						$('.fixture-venue', allFixtures[y]).val() == venue) {
 						$.notify('Cannot save fixtures - team/venue duplicate', {
 							className: 'error'
