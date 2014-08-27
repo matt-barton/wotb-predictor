@@ -235,6 +235,16 @@
 				  , date  = $('.fixture-date', allFixtures[x]).val()
 				  , venue = $('.fixture-venue', allFixtures[x]).val();
 
+				if (!team || !date || !venue) {
+					if (!date) $('.fixture-date', allFixtures[x]).parent().addClass('field-with-errors');
+					if (!team) $('.fixture-team', allFixtures[x]).parent().addClass('field-with-errors');
+					if (!venue) $('.fixture-venue', allFixtures[x]).parent().addClass('field-with-errors');
+					$.notify('Cannot save fixtures - information is missing', {
+						className: 'error'
+					});
+					ok = false;
+				}
+
 				for(var y=0; y<allFixtures.length; y++) {
 					if (rowsWithErrors.indexOf(y) >= 0) continue;
 					if (x==y) continue;
