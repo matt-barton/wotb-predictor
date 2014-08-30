@@ -236,16 +236,26 @@
 		});
 
 		$('.post-fixtures').click(function(){
-			$('.fixture-input').parent().removeClass('field-with-errors');
-
-			var season = {
-				name: $('#seasonName').val(),
-				miniseasons: []
-			};
-
+			
 			var ok = true;
 			var allFixtures = $('.fixture-block');
 			var rowsWithErrors = [];
+
+			$('.field-with-errors').removeClass('field-with-errors');
+
+			var seasonNameField = $('#seasonName');
+			if (seasonNameField.val().length == 0) {
+				seasonNameField.parent().addClass('field-with-errors');
+				$.notify('Cannot save fixtures - name cannot be blank.', {
+					className: 'error'
+				});
+				ok = false;
+			}
+
+			var season = {
+				name: seasonNameField.val(),
+				miniseasons: []
+			};
 
 			for(var x=0; x<allFixtures.length; x++) {
 				if (rowsWithErrors.indexOf(x) >= 0) continue;
