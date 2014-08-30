@@ -44,8 +44,11 @@
 							<option{{#compare venue '==' 'A'}} selected{{/compare}}>A</option>
 						</select>
 					</div><!--
-			 	--><div class="grid__item three-eighths">
+			 	--><div class="grid__item two-eighths">
 						<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-date" class="fixture-date fixture-input text-input" id="newFixtureDate" size="12" value="{{date}}" readonly="readonly" />
+					</div><!--
+			 	--><div class="grid__item one-eighth">
+						<i class="fa fa-times wotb-delete-fixture" title="Delete Fixture"></i>
 					</div><!--
 			 --></div><!--
 			 	{{else}}
@@ -103,6 +106,14 @@
 		$('.fixture-input').change(function(){
 			removeErrorClass($(this));
 		});
+
+		// delete buttons
+		var deleteFixture = function() {
+			var fixture = $(this).closest('.fixture-block');
+			fixture.remove();
+		};
+
+		$('.wotb-delete-fixture').click(deleteFixture);
 
 		// add fixture buttons
 		$('.wotb-add-fixture').click(function(){
@@ -188,7 +199,7 @@
 							.addClass('fixture-input')
 							.append('<option' + (fixtureVenue == 'H' ? ' selected' : '') + '>H</option>')
 							.append('<option' + (fixtureVenue == 'A' ? ' selected' : '') + '>A</option>'));
-			var dateDiv = $('<div class="grid__item three-eighths">')
+			var dateDiv = $('<div class="grid__item two-eighths">')
 					.css('display', 'none')
 					.append($('<input type="text" />')
 						.attr('id', miniSeasonId + '-' + numberOfFixtures + '-fixture-date')
@@ -199,17 +210,24 @@
 						.addClass('input-text')
 						.val(fixtureDate)
 						.datepicker());
+			var deleteDiv = $('<div class="grid__item one-eighth">')
+				.css('display', 'none')
+				.append($('<i class="fa fa-times" title="Delete Fixture"></i>')
+					.attr('id', miniSeasonId + '-' + numberOfFixtures + '-fixture-delete')
+					.click(deleteFixture));
 
 			$('#' + miniSeasonId + '-fixtures-grid')
 				.append($('<div class="fixture-block">')
 					.append(teamDiv)
 					.append(venueDiv)
-					.append(dateDiv));
+					.append(dateDiv)
+					.append(deleteDiv));
 
 			$('#' + miniSeasonId + '-no-fixtures-div').hide();
 			teamDiv.show('slow');
 			venueDiv.show('slow');
 			dateDiv.show('slow');
+			deleteDiv.show('slow');
 
 			fixtureDateField.val('');
 			fixtureTeamField.val('');
