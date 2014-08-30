@@ -2,6 +2,9 @@
 	.pointer:hover {
 		cursor: pointer;
 	}
+	.hidden {
+		display: none;
+	}
 </style>
 
 <span class="alpha">Fixtures Adminisatration</span>
@@ -43,16 +46,16 @@
 		 	 --><div class="grid__item three-eighths">
 					<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-team" class="fixture-team input-text fixture-input" size="12" value="{{team}}" />
 				</div><!--
-		 	--><div class="grid__item two-eighths">
+		 	 --><div class="grid__item two-eighths">
 					<select id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-venue" class="fixture-venue fixture-input">
 						<option{{#compare venue '==' 'H'}} selected{{/compare}}>H</option>
 						<option{{#compare venue '==' 'A'}} selected{{/compare}}>A</option>
 					</select>
 				</div><!--
-		 	--><div class="grid__item two-eighths">
+		 	 --><div class="grid__item two-eighths">
 					<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-date" class="fixture-date fixture-input text-input" id="newFixtureDate" size="12" value="{{date}}" readonly="readonly" />
 				</div><!--
-		 	--><div class="grid__item one-eighth">
+		 	 --><div class="grid__item one-eighth">
 					<i class="fa fa-times wotb-delete-fixture pointer" title="Delete Fixture"></i>
 				</div><!--
 		 --></div><!--
@@ -61,21 +64,21 @@
 		 		No fixtures yet.
 		 	</div><!--
 			{{/each}}
+		 --><div class="grid__item one-whole">
+		 		<i class="fa fa-plus wotb-trigger-add-controls pointer" id="{{miniseasonHtmlId}}-trigger-add-controls"></i> Add Fixture
+		 	</div><!--
 	 --></div>
 	</div><!--
- --><div class="grid__item one-whole">
- 		<div class="rule--dotted"></div>
- 	</div><!--
- --><div class="grid__item one-third"></div><!--
- --><div class="grid__item two-thirds">
+ --><div class="grid__item one-third add-fixture-controls-{{miniseasonHtmlId}}" style="display: none;"></div><!--
+ --><div class="grid__item two-thirds add-fixture-controls-{{miniseasonHtmlId}}" style="display: none;">
  		<div class="grid"><!--
 		 --><div class="grid__item three-eighths">
 				<label class="epsilon">Team</label>
-				<input type="text" size="12" class="fixture-team fixture-input text-input" id="{{miniseasonHtmlId}}_add-fixture-team" placeholder="team name" />
+				<input type="text" size="12" class="fixture-team fixture-input text-input" id="{{miniseasonHtmlId}}-add-fixture-team" placeholder="team name" />
 			</div><!--
 		 --><div class="grid__item two-eighths">
 				<label class="epsilon">Home/Away</label>
-				<select id="{{miniseasonHtmlId}}_add-fixture-venue" class="fixture-input">
+				<select id="{{miniseasonHtmlId}}-add-fixture-venue" class="fixture-input">
 					<option></option>
 					<option>H</option>
 					<option>A</option>
@@ -83,10 +86,10 @@
 			</div><!--
 		 --><div class="grid__item two-eighths">
 				<label class="epsilon">Fixture Date</label>
-				<input type="text" size="12" class="fixture-date text-input fixture-input" id="{{miniseasonHtmlId}}_add-fixture-date" placeholder="dd/mm/yyyy" readonly="readonly" />
+				<input type="text" size="12" class="fixture-date text-input fixture-input" id="{{miniseasonHtmlId}}-add-fixture-date" placeholder="dd/mm/yyyy" readonly="readonly" />
 			</div><!--
 		 --><div class="grid__item one-eighth left bottom">
-				<i id="{{miniseasonHtmlId}}_add-fixture-icon" class="fa fa-plus wotb-add-fixture pointer"></i>
+				<i id="{{miniseasonHtmlId}}-add-fixture-icon" class="fa fa-plus wotb-add-fixture pointer"></i>
 			</div><!--
 	 --></div>
 	</div>
@@ -125,15 +128,26 @@
 
 		$('.wotb-delete-fixture').click(deleteFixture);
 
+		// trigger add fixture controls
+		$('.wotb-trigger-add-controls').click(function(){
+			var miniSeasonId = $(this)
+				.attr('id')
+				.split('-')[0];
+			$(this)
+				.parent()
+				.hide();
+			$('.add-fixture-controls-' + miniSeasonId).slideDown(500);
+		});
+ 
 		// add fixture buttons
 		$('.wotb-add-fixture').click(function(){
 			var miniSeasonId = $(this)
 				.attr('id')
-				.split('_')[0];
+				.split('-')[0];
 
-			var fixtureDateField = $('#' + miniSeasonId + '_add-fixture-date');
-			var fixtureTeamField = $('#' + miniSeasonId + '_add-fixture-team');
-			var fixtureVenueField = $('#' + miniSeasonId + '_add-fixture-venue');
+			var fixtureDateField = $('#' + miniSeasonId + '-add-fixture-date');
+			var fixtureTeamField = $('#' + miniSeasonId + '-add-fixture-team');
+			var fixtureVenueField = $('#' + miniSeasonId + '-add-fixture-venue');
 			var fixtureDate = fixtureDateField.val();
 			var fixtureTeam = fixtureTeamField.val();
 			var fixtureVenue = fixtureVenueField.val();
