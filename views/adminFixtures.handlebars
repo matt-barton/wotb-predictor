@@ -297,14 +297,6 @@
 					ok = false;
 				}
 
-				if (Date.parse(date) < Date.now()) {
-					$('.fixture-date', allFixtures[x]).parent().addClass('field-with-errors');
-					$.notify('Cannot save fixtures - date is in the past', {
-						className: 'error'
-					});
-					ok = false;
-				}
-
 				for(var y=0; y<allFixtures.length; y++) {
 					if (rowsWithErrors.indexOf(y) >= 0) continue;
 					if (x==y) continue;
