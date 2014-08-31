@@ -34,7 +34,7 @@
 		<span class="Epsilon">Predictions Deadline</span>
 	</div><!--
  --><div class="grid__item two-thirds">
-		<input type="text" class="miniseason-deadline text-input" id="{{miniseasonHtmlId}}-deadline" value="{{deadline}}" size="12" />
+		<input type="text" class="miniseason-deadline text-input" id="{{miniseasonHtmlId}}-deadline" value="{{deadline}}" size="12" readonly="readonly" />
 	</div><!--
  --><div class="grid__item one-third">
 		<span class="epsilon">Fixtures</span>
@@ -195,7 +195,9 @@
 
 			if (duplicate) return;
 
-			if (Date.parse(fixtureDate) < Date.now()) {
+			var yesterday = new Date();
+			yesterday.setDate(yesterday.getDate() - 1);
+			if (Date.parse(fixtureDate) < yesterday) {
 				$.notify('Cannot add this fixture - date in the past', {
 					className: 'error'
 				});
@@ -264,10 +266,15 @@
 			var ok = true;
 			var allFixtures = $('.fixture-block');
 			var rowsWithErrors = [];
+			var seasonNameField = $('#seasonName');
 
 			$('.field-with-errors').removeClass('field-with-errors');
 
-			var seasonNameField = $('#seasonName');
+			var season = {
+				name: seasonNameField.val(),
+				miniseasons: []
+			};
+
 			if (seasonNameField.val().length == 0) {
 				seasonNameField.parent().addClass('field-with-errors');
 				$.notify('Cannot save fixtures - name cannot be blank.', {
@@ -276,10 +283,22 @@
 				ok = false;
 			}
 
-			var season = {
-				name: seasonNameField.val(),
-				miniseasons: []
-			};
+			$('.miniseason-deadline').each(function(){
+				var deadlineField = $(this);
+				if (!deadlineField.val()) {
+					var miniSeasonId = deadlineField
+						.attr('id')
+						.split('-')
+						[0];
+					var fixturesGrid = $('#' + miniSeasonId + '-fixtures-grid');
+					if ($('.fixture-team', fixturesGrid).length > 0) {
+						$.notify('Cannot save fixtures - season ' + ((miniSeasonId/1) + 1) + ' needs a deadline date.', {
+							className: 'error'
+						});
+						ok = false;
+					}
+				}
+			});
 
 			for(var x=0; x<allFixtures.length; x++) {
 				if (rowsWithErrors.indexOf(x) >= 0) continue;
@@ -368,7 +387,14 @@
 				success: function(result){
 					$.unblockUI();
 					if (result.error) {
-						$.notify(result.error, 'warn');
+						if ($.isArray(result.error)) {
+							result.error.forEach(function(eachError){
+								$.notify(eachError, 'error');
+							});
+						}
+						else {
+							$.notify(result.error, 'error');
+						}
 					}
 					else {
 						$.notify('Fixtures saved.', 'success');
@@ -376,7 +402,7 @@
 				},
 				error: function(jqXHR, status, error){
 					$.unblockUI();
-					$.notify('Cannot save results. There was an error.', 'warn');
+					$.notify('Cannot save results. There was an error.', 'error');
 				}
 			});
 		});
