@@ -52,10 +52,7 @@
 						<option{{#compare venue '==' 'A'}} selected{{/compare}}>A</option>
 					</select>
 				</div><!--
-		 	 --><div class="grid__item two-eighths">
-					<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-date" class="fixture-date fixture-input text-input" id="newFixtureDate" size="12" value="{{date}}" readonly="readonly" />
-				</div><!--
-		 	 --><div class="grid__item one-eighth">
+		 	 --><div class="grid__item three-eighths">
 					<i class="fa fa-times wotb-delete-fixture pointer" title="Delete Fixture"></i>
 				</div><!--
 		 --></div><!--
@@ -84,11 +81,7 @@
 					<option>A</option>
 				</select>
 			</div><!--
-		 --><div class="grid__item two-eighths">
-				<label class="epsilon">Fixture Date</label>
-				<input type="text" size="12" class="fixture-date text-input fixture-input" id="{{miniseasonHtmlId}}-add-fixture-date" placeholder="dd/mm/yyyy" readonly="readonly" />
-			</div><!--
-		 --><div class="grid__item one-eighth left bottom">
+		 --><div class="grid__item three-eighths left bottom">
 				<i id="{{miniseasonHtmlId}}-add-fixture-icon" class="fa fa-plus wotb-add-fixture pointer"></i>
 			</div><!--
 	 --></div>
@@ -103,21 +96,34 @@
 <script>
 	$(document).ready(function(){
 
+		var errorGroups = [];
+
 		// date pickers
 		$('.miniseason-deadline').datepicker();
-		$('.fixture-date').datepicker();
 
 		// add fixture fields
 		var removeErrorClass = function (el) {
-			el.parent().removeClass('field-with-errors');
+			if (errorGroups.length == 0) return;
+			remainderErrorGroups = [];
+			for (var x=0; x<errorGroups.length; x++) {
+				if ($.inArray(el, errorGroups[x]) == -1) {
+					remainderErrorGroups[remainderErrorGroups.length] = errorGroups[x];
+				}
+				else {
+					for (var y=0; y<errorGroups[x].length; y++) {
+						$('#' + errorGroups[x][y]).parent().removeClass('field-with-errors');
+					}
+				}
+			}
+			errorGroups = remainderErrorGroups;
 		};
 
 		$('.fixture-input').keyup(function(){
-			removeErrorClass($(this));
+			removeErrorClass($(this).attr('id'));
 		});
 
 		$('.fixture-input').change(function(){
-			removeErrorClass($(this));
+			removeErrorClass($(this).attr('id'));
 		});
 
 		// delete buttons
@@ -145,15 +151,12 @@
 				.attr('id')
 				.split('-')[0];
 
-			var fixtureDateField = $('#' + miniSeasonId + '-add-fixture-date');
 			var fixtureTeamField = $('#' + miniSeasonId + '-add-fixture-team');
 			var fixtureVenueField = $('#' + miniSeasonId + '-add-fixture-venue');
-			var fixtureDate = fixtureDateField.val();
 			var fixtureTeam = fixtureTeamField.val();
 			var fixtureVenue = fixtureVenueField.val();
 
-			if (!fixtureDate || !fixtureTeam || !fixtureVenue) {
-				if (!fixtureDate) fixtureDateField.parent().addClass('field-with-errors');
+			if (!fixtureTeam || !fixtureVenue) {
 				if (!fixtureTeam) fixtureTeamField.parent().addClass('field-with-errors');
 				if (!fixtureVenue) fixtureVenueField.parent().addClass('field-with-errors');
 				$.notify('Cannot add this fixture - information is missing', {
@@ -166,21 +169,26 @@
 			  , processedFixtures = 0
 			  , duplicate = false;
 
+			errorGroups = [];
+
 			allFixtures.each(function(i, fixture){
 				if ($('.fixture-team', fixture).val().toLowerCase() == fixtureTeam.toLowerCase() && $('.fixture-venue', fixture).val() == fixtureVenue) {
 					$.notify('Cannot add this fixture - duplicate team/fixture', {
 						className: 'error'
 					});
 					duplicate = true;
+					var errorGroup = [
+						fixtureTeamField.attr('id'),
+						fixtureVenueField.attr('id'),
+						$('.fixture-team', fixture).attr('id'),
+						$('.fixture-venue', fixture).attr('id')
+					];
+					errorGroups[errorGroups.length] = errorGroup;
+					errorGroup.forEach(function(id, x){
+						$('#' + id).parent().addClass('field-with-errors');
+					});
 				}
 
-				if ($('.fixture-date', fixture).val() == fixtureDate) {
-					$.notify('Cannot add this fixture - duplicate date', {
-						className: 'error'
-					});
-					return;
-					duplicate = true;
-				}
 				processedFixtures++;
 			});
 
@@ -194,15 +202,6 @@
 			}
 
 			if (duplicate) return;
-
-			var yesterday = new Date();
-			yesterday.setDate(yesterday.getDate() - 1);
-			if (Date.parse(fixtureDate) < yesterday) {
-				$.notify('Cannot add this fixture - date in the past', {
-					className: 'error'
-				});
-				return;
-			}
 
 			var fixturesDiv = $('#' + miniSeasonId + '-fixtures-grid');
 			var numberOfFixtures = $('.fixture-team', fixturesDiv).length;
@@ -225,18 +224,7 @@
 							.addClass('fixture-input')
 							.append('<option' + (fixtureVenue == 'H' ? ' selected' : '') + '>H</option>')
 							.append('<option' + (fixtureVenue == 'A' ? ' selected' : '') + '>A</option>'));
-			var dateDiv = $('<div class="grid__item two-eighths">')
-					.css('display', 'none')
-					.append($('<input type="text" />')
-						.attr('id', miniSeasonId + '-' + numberOfFixtures + '-fixture-date')
-						.attr('size', 12)
-						.attr('readonly', 'readonly')
-						.addClass('fixture-date')
-						.addClass('fixture-input')
-						.addClass('input-text')
-						.val(fixtureDate)
-						.datepicker());
-			var deleteDiv = $('<div class="grid__item one-eighth">')
+			var deleteDiv = $('<div class="grid__item three-eighths">')
 				.css('display', 'none')
 				.append($('<i class="fa fa-times pointer" title="Delete Fixture"></i>')
 					.attr('id', miniSeasonId + '-' + numberOfFixtures + '-fixture-delete')
@@ -246,16 +234,13 @@
 				.append($('<div class="fixture-block">')
 					.append(teamDiv)
 					.append(venueDiv)
-					.append(dateDiv)
 					.append(deleteDiv));
 
 			$('#' + miniSeasonId + '-no-fixtures-div').hide();
 			teamDiv.show('slow');
 			venueDiv.show('slow');
-			dateDiv.show('slow');
 			deleteDiv.show('slow');
 
-			fixtureDateField.val('');
 			fixtureTeamField.val('');
 			fixtureVenueField.val('');
 
@@ -267,6 +252,7 @@
 			var allFixtures = $('.fixture-block');
 			var rowsWithErrors = [];
 			var seasonNameField = $('#seasonName');
+			errorGroups = [];
 
 			$('.field-with-errors').removeClass('field-with-errors');
 
@@ -303,11 +289,9 @@
 			for(var x=0; x<allFixtures.length; x++) {
 				if (rowsWithErrors.indexOf(x) >= 0) continue;
 				var team  = $('.fixture-team', allFixtures[x]).val()
-				  , date  = $('.fixture-date', allFixtures[x]).val()
 				  , venue = $('.fixture-venue', allFixtures[x]).val();
 
-				if (!team || !date || !venue) {
-					if (!date) $('.fixture-date', allFixtures[x]).parent().addClass('field-with-errors');
+				if (!team || !venue) {
 					if (!team) $('.fixture-team', allFixtures[x]).parent().addClass('field-with-errors');
 					if (!venue) $('.fixture-venue', allFixtures[x]).parent().addClass('field-with-errors');
 					$.notify('Cannot save fixtures - information is missing', {
@@ -326,23 +310,16 @@
 							className: 'error'
 						});
 
-						$('.fixture-team', allFixtures[y]).parent().addClass('field-with-errors');
-						$('.fixture-venue', allFixtures[y]).parent().addClass('field-with-errors');
-						$('.fixture-team', allFixtures[x]).parent().addClass('field-with-errors');
-						$('.fixture-venue', allFixtures[x]).parent().addClass('field-with-errors');
-
-						ok = false;
-						if(!rowsWithErrors.indexOf(x)) rowsWithErrors.push(x);
-						if(!rowsWithErrors.indexOf(y)) rowsWithErrors.push(y);
-					}
-
-					if ($('.fixture-date', allFixtures[y]).val() == date) {
-						$.notify('Cannot save fixtures - duplicate date', {
-							className: 'error'
+						var errorGroup = [
+							$('.fixture-team', allFixtures[y]).attr('id'),
+							$('.fixture-venue', allFixtures[y]).attr('id'),
+							$('.fixture-team', allFixtures[x]).attr('id'),
+							$('.fixture-venue', allFixtures[x]).attr('id')
+						];
+						errorGroups[errorGroups.length] = errorGroup;
+						errorGroup.forEach(function(id){
+							$('#' + id).parent().addClass('field-with-errors');
 						});
-
-						$('.fixture-date', allFixtures[y]).parent().addClass('field-with-errors');
-						$('.fixture-date', allFixtures[x]).parent().addClass('field-with-errors');
 
 						ok = false;
 						if(!rowsWithErrors.indexOf(x)) rowsWithErrors.push(x);
@@ -362,7 +339,6 @@
 					season.miniseasons[i].fixtures[j] = {
 						team: $('#' + i + '-' + j + '-fixture-team').val(),
 						venue: $('#' + i + '-' + j + '-fixture-venue').val(),
-						date: $('#' + i + '-' + j + '-fixture-date').val()
 					}
 				});
 			});
