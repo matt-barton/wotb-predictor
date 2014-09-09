@@ -1,7 +1,7 @@
 // Libraries
 var couchapp = require('couchapp');
 var fs = require('fs');
-var config = require(__dirname + '/../config.json');
+var config = require(__dirname + '/../db.config.json');
 
 // Design doc path
 var docPath = __dirname + '/design_docs/';
