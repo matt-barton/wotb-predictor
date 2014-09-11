@@ -191,7 +191,9 @@ app.get('/admin', function(request, response, next) {
 
 app.get('/admin-fixtures', function(request, response, next) {
     var auth = require('./lib/auth')(db, request.session);
-    pages.admin.fixtures(response, auth, db, {});
+    pages.admin.fixtures(response, auth, db, {
+        action: request.query.action == null ? null : request.query.action 
+    });
 });
 
 app.post('/saveFixtures', function(request, response, next){

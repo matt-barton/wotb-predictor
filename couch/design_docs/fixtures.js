@@ -23,6 +23,17 @@ module.exports = {
       },
 
       reduce: null
+    },
+
+    byId: {
+
+      map: function(doc) {
+        if (doc.type && doc.type == 'season') {
+          emit(doc._id, doc);
+        }
+      },
+
+      reduce: null
     }
 
   }

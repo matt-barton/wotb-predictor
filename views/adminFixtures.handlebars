@@ -13,19 +13,29 @@
 	<button type="button" class="btn btn--negative post-fixtures">Save Details</button>
 </div>
 
+<div id="options">
+	{{#if season.current}}
+	<a href="/admin-fixtures?action=new-game" id="new-game-link">Setup New Game</a>
+	{{else}}
+	<a href="#" id="make-game-current-link">Activate this game</a>
+	{{/if}}
+</div>
+
 <div id="first" class="grid page-block eleven-twelfths">
 	<div class="grid__item one-whole">
-		<span class="delta">Current Game</span>
+		<span class="delta">{{gameTypeLabel}}</span>
 	</div><!--
  --><div class="grid__item one-quarter">
  		Name
  	</div><!--
   --><div class="grid__item one-quarter">
-		<input type="text" value="{{currentSeason.name}}" id="seasonName" size="12" />
+		<input type="text" value="{{season.name}}" id="seasonName" size="12" />
 	</div>
 </div>
 
-{{#each currentSeason.miniseasons}}
+<input type="hidden" id="seasonId" value="{{season._id}}" />
+
+{{#each season.miniseasons}}
 <div class="grid page-block eleven-twelfths season-block">
 	<div class="grid__item one-whole">
 		<span class="delta">{{name}}</span>
@@ -246,17 +256,21 @@
 
 		});
 
+		// save fixtures buttons
 		$('.post-fixtures').click(function(){
 			
 			var ok = true;
 			var allFixtures = $('.fixture-block');
 			var rowsWithErrors = [];
 			var seasonNameField = $('#seasonName');
+			var seasonIdField = $('#seasonId');
+
 			errorGroups = [];
 
 			$('.field-with-errors').removeClass('field-with-errors');
 
 			var season = {
+				id: seasonIdField.val(),
 				name: seasonNameField.val(),
 				miniseasons: []
 			};
@@ -383,6 +397,5 @@
 			});
 		});
 	});
-
 
 </script>
