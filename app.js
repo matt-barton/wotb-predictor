@@ -189,10 +189,11 @@ app.get('/admin', function(request, response, next) {
     pages.admin.index(response, auth, {});
 });
 
-app.get('/admin-fixtures', function(request, response, next) {
+app.get('/admin/fixtures', function(request, response, next) {
     var auth = require('./lib/auth')(db, request.session);
     pages.admin.fixtures(response, auth, db, {
-        action: request.query.action == null ? null : request.query.action 
+        action: request.query.action == null ? null : request.query.action,
+        id: request.query.id == null ? null : request.query.id
     });
 });
 
@@ -207,9 +208,9 @@ app.post('/saveFixtures', function(request, response, next){
             response.end(JSON.stringify({
                 error: e
             }));
-        }, function() {
+        }, function(seasonId) {
             response.end(JSON.stringify({
-                results: 'OK'
+                redirect: '/admin/fixtures?id='+seasonId
             }));
         });
     }
@@ -218,9 +219,31 @@ app.post('/saveFixtures', function(request, response, next){
     }
 });
 
-app.get('/admin-report-predictions', function(request, response, next) {
+app.get('/admin/reports/predictions', function(request, response, next) {
     var auth = require('./lib/auth')(db, request.session);
     pages.admin.reports.predictions(response, auth, {});
+});
+
+app.post('/activateSeason', function(request, response, next){
+    var auth = require('./lib/auth')(db, request.session);
+    if (auth.loggedIn() && auth.isAdmin()) {
+        var fixtures = require('./lib/fixtures')(db);
+        response.setHeader('Content-Type', 'application/json');
+        fixtures.activateSeason(request.body, function(e) {
+            console.log('\nERROR\n');
+            console.log(e);
+            response.end(JSON.stringify({
+                error: e
+            }));
+        }, function(seasonId) {
+            response.end(JSON.stringify({
+                redirect: '/admin/fixtures?id='+seasonId
+            }));
+        });
+    }
+    else {
+        pages.indexRedirect(response);
+    }
 });
 
 /*
