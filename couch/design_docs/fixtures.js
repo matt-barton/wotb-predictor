@@ -34,7 +34,19 @@ module.exports = {
       },
 
       reduce: null
+    },
+
+    allSeasonNames: {
+
+      map: function(doc) {
+        if (doc.type && doc.type == 'season') {
+          emit(doc._id, doc.name);
+        }
+      },
+
+      reduce: null
     }
+
 
   }
 };
