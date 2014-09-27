@@ -20,6 +20,20 @@
 	{{#compare season._id '!=' null}}
 	<a href="#" id="make-game-current-link">Activate this game</a>
 	{{/compare}}{{/compare}}
+	{{#compare allSeasonNames.length '>' 1}}
+	<a href="#" id="edit-other-game">Edit Different Game</a>
+	{{/compare}}
+</div>
+
+<div id="game-choice-dialog" class="hidden">
+	Chose: 
+	<select id="game-choice-select">
+	{{#each allSeasonNames}}
+	{{#compare currentSeasonId '!=' id}}
+	<option value="{{id}}">{{value}}</option>
+	{{/compare}}
+	{{/each}}
+	</select>
 </div>
 
 <div id="first" class="grid page-block eleven-twelfths">
@@ -451,6 +465,43 @@
 				}
 			});
 
+		});
+
+		var gameChoiceDialog = $('#game-choice-dialog');
+
+		var closeDialog = function() {
+			gameChoiceDialog.dialog('close');
+		}
+
+		var redirectToSelectedGame = function() {
+			var chosenGame = $('#game-choice-select').val();
+			closeDialog();
+			$.blockUI({
+				css: { 
+		            border: 'none', 
+		            padding: '15px', 
+		            backgroundColor: '#000', 
+		            '-webkit-border-radius': '10px', 
+		            '-moz-border-radius': '10px', 
+		            opacity: .5, 
+		            color: '#fff' 
+        		}
+        	});
+			window.location.href = '{{editChosenGameUrl}}' + chosenGame;
+		};
+
+		gameChoiceDialog.dialog({
+			autoOpen: false,
+			modal: true,
+			title: 'Chose game to edit ...',
+			buttons: {
+				OK: redirectToSelectedGame,
+				Cancel: closeDialog
+			}
+		});
+
+		$('#edit-other-game').click(function(){
+			gameChoiceDialog.dialog('open');
 		});
 	});
 
