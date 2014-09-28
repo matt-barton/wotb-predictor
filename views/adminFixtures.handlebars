@@ -49,6 +49,7 @@
 </div>
 
 <input type="hidden" id="seasonId" value="{{season._id}}" />
+<input type="hidden" id="message" value="{{message}}" />
 
 {{#each season.miniseasons}}
 <div class="grid page-block eleven-twelfths season-block">
@@ -120,6 +121,11 @@
 
 <script>
 	$(document).ready(function(){
+
+		var message = $('#message').val();
+		if (message.length > 0) {
+			$.notify(message, 'success');
+		}
 
 		var seasonIdField = $('#seasonId');
 		var errorGroups = [];
@@ -503,6 +509,7 @@
 		$('#edit-other-game').click(function(){
 			gameChoiceDialog.dialog('open');
 		});
+
 	});
 
 </script>

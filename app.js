@@ -191,10 +191,21 @@ app.get('/admin', function(request, response, next) {
 
 app.get('/admin/fixtures', function(request, response, next) {
     var auth = require('./lib/auth')(db, request.session);
+
+    var message;
+    if (request.session.userMessage
+            && request.session.userMessage.page == '/admin/fixtures'
+            && request.session.userMessage.user == auth.username())
+    {
+        message = request.session.userMessage.message;
+        request.session.userMessage = null;
+    }
+
     pages.admin.fixtures(response, auth, db, {
         action: request.query.action == null ? null : request.query.action,
-        id: request.query.id == null ? null : request.query.id
-    });
+        id: request.query.id == null ? null : request.query.id,
+        message: message
+    }) ;
 });
 
 app.post('/saveFixtures', function(request, response, next){
@@ -235,7 +246,14 @@ app.post('/activateSeason', function(request, response, next){
             response.end(JSON.stringify({
                 error: e
             }));
-        }, function(seasonId) {
+        }, function(seasonId, message) {
+            if (message) {
+                request.session.userMessage = {
+                    page: '/admin/fixtures',
+                    user: auth.username(),
+                    message: message
+                };
+            }
             response.end(JSON.stringify({
                 redirect: '/admin/fixtures?id='+seasonId
             }));
