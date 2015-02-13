@@ -1,0 +1,23 @@
+{
+  "couch": {
+  	"protocol" : "http",
+    "host": "localhost",
+    "port": 5984,
+    "db": "wotb-predictor",
+    "options": {
+    	
+    }
+  },
+  "cloudant": {
+  	"protocol": "https",
+    "host": "mattbarton.cloudant.com",
+    "port": 80,
+    "db": "wotb-predictor",
+    "options": {
+	    "auth": { 
+    		"username": "<username>",
+    		"password": "<password>"
+    	}
+    }
+  }
+}
