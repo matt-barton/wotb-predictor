@@ -4,3 +4,8 @@ node_modules
 app/bower_components
 assets/styles/screen.css
 db.config.json
+assets/bower_components/jquery-ui/themes/flick/images/Thumbs.db
+assets/bower_components/jquery-ui/themes/ui-lightness/images/Thumbs.db
+assets/styles/screen.css.map
+wotb-predictor.sublime-project
+wotb-predictor.sublime-workspace
