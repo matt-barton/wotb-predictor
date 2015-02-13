@@ -19,5 +19,6 @@
     		"password": "<password>"
     	}
     }
-  }
+  },
+  "useConfig": "couch"
 }

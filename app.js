@@ -11,10 +11,11 @@ var bodyParser = require('body-parser');
 /*
 * Database
 */
-var dbConfig = require('./db.config.json');
+var allDbConfigs = require('./db.config.json');
+var dbConfig = allDbConfigs[allDbConfigs.useConfig];
 var cradle = require('cradle');
-var db = new(cradle.Connection)(dbConfig.couch.host, dbConfig.couch.port, dbConfig.couch.options)
-    .database(dbConfig.couch.db);
+var db = new(cradle.Connection)(dbConfig.host, dbConfig.port, dbConfig.options)
+    .database(dbConfig.db);
 
 /*
 * Libraries
