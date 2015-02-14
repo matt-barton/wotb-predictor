@@ -5,7 +5,10 @@
     "port": 5984,
     "db": "wotb-predictor",
     "options": {
-    	
+      "auth": { 
+        "username": "<username>",
+        "password": "<password>"
+      }
     }
   },
   "cloudant": {
