@@ -187,7 +187,9 @@ app.get('/signOut', function(request, response, next){
 
 app.get('/admin', function(request, response, next) {
     var auth = require('./lib/auth')(db, request.session);
-    pages.admin.index(response, auth, {});
+    pages.admin.index(response, auth, {}, function (e) {
+        return next(e);
+    });
 });
 
 app.get('/admin/fixtures', function(request, response, next) {
@@ -206,7 +208,9 @@ app.get('/admin/fixtures', function(request, response, next) {
         action: request.query.action == null ? null : request.query.action,
         id: request.query.id == null ? null : request.query.id,
         message: message
-    }) ;
+    }, function (e){
+        return next(e);
+    });
 });
 
 app.post('/saveFixtures', function(request, response, next){
@@ -264,6 +268,15 @@ app.post('/activateSeason', function(request, response, next){
         pages.indexRedirect(response);
     }
 });
+
+/*
+* Error Handling
+*/
+function errorHandler(e, request, response, next) {
+    response.status(500);
+    pages.error(response, e);
+}
+app.use(errorHandler);
 
 /*
  * Start it up
