@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
     dbHost = process.env.PROD_COUCH_HOST;
     dbPort = process.env.PROD_COUCH_PORT;
     dbDatabase = process.env.PROD_COUCH_DB;
-    obOptions.auth = {
+    dbOptions.auth = {
         "username": process.env.PROD_COUCH_USERNAME,
         "password": process.env.PROD_COUCH_PASSWORD
     };
