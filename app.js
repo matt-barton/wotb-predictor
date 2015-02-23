@@ -41,6 +41,7 @@ var db = new(cradle.Connection)(dbHost, dbPort, dbOptions)
 * Libraries
 */
 var pages = require('./lib/pages');
+var users = require('./lib/users')(db);
 
 /*
  * Use Handlebars for templating
@@ -104,22 +105,28 @@ app.use(express.session({secret: 'asd7bjuw3mbd8x7£bbqdkj2!8^*p'}));
  * Routes
  */
 app.get('/', function(request, response, next) {
-    var auth = require('./lib/auth')(db, request.session);
+
+    var auth = require('./lib/auth')(request.session, users);
+
+    var onError = function (e){
+        return next(e);
+    };
+
     if (request.cookies.autologin && !auth.loggedIn()) {
         auth.doAutoLogin(request.cookies.autologin, function(e) {
-            pages.index(response, auth, {});
+            pages.index(response, auth, db, {}, onError);
         }, function(e) {
             console.log('\nERROR\n');
             console.log(e);
             response.clearCookie('autologin');
-            pages.index(response, auth, {
+            pages.index(response, auth, db, {
                 loginError: e,
                 username: request.body.username
-            });
+            }, onError);
         });
     }
     else {
-        pages.index(response, auth, {});
+        pages.index(response, auth, db, {}, onError);
     }
 });
 
@@ -128,7 +135,7 @@ app.get('/register', function(request, response, next) {
 });
 
 app.get('/jsonCheckUsername', function(request, response, next){
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
     response.setHeader('Content-Type', 'application/json');
     if (request.query.username) {
         return auth.usernameInUse(request.query.username, function(inUse){
@@ -141,7 +148,7 @@ app.get('/jsonCheckUsername', function(request, response, next){
 });
 
 app.post('/doSignUp', function(request, response, next) {
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
     auth.signUp(
         request.body, 
         function(){
@@ -158,7 +165,12 @@ app.post('/doSignUp', function(request, response, next) {
 });
 
 app.post('/signIn', function(request, response){
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
+
+    var onError = function (e){
+        return next(e);
+    };
+
     auth.signIn( 
         request.body,
         function(){
@@ -175,30 +187,35 @@ app.post('/signIn', function(request, response){
         function(e){
             console.log('\nERROR\n');
             console.log(e);
-            pages.index(response, auth, {
+            pages.index(response, auth, db, {
                 loginError: e,
                 username: request.body.username
-            });
+            }, onError);
         });
 });
 
 app.post('/login', function(request, response, next){
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
+
+    var onError = function (e){
+        return next(e);
+    };
+
     auth.login(
         request.body,
         function(){
-            pages.index(response, auth, {});
+            pages.index(response, auth, db, {}, onError);
         },
         function(e){
             console.log('\nERROR\n');
             console.log(e);
-            pages.index(response, auth, {});
+            pages.index(response, auth, db, {}, onError);
         }
     );
 });
 
 app.get('/signOut', function(request, response, next){
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
     auth.signOut(function(){
         response.clearCookie('autologin');
         pages.indexRedirect(response);
@@ -206,14 +223,14 @@ app.get('/signOut', function(request, response, next){
 });
 
 app.get('/admin', function(request, response, next) {
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
     pages.admin.index(response, auth, {}, function (e) {
         return next(e);
     });
 });
 
 app.get('/admin/fixtures', function(request, response, next) {
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
 
     var message;
     if (request.session.userMessage
@@ -234,7 +251,7 @@ app.get('/admin/fixtures', function(request, response, next) {
 });
 
 app.post('/saveFixtures', function(request, response, next){
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
     if (auth.loggedIn() && auth.isAdmin()) {
         var fixtures = require('./lib/fixtures')(db);
         response.setHeader('Content-Type', 'application/json');
@@ -256,12 +273,12 @@ app.post('/saveFixtures', function(request, response, next){
 });
 
 app.get('/admin/reports/predictions', function(request, response, next) {
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
     pages.admin.reports.predictions(response, auth, {});
 });
 
 app.post('/activateSeason', function(request, response, next){
-    var auth = require('./lib/auth')(db, request.session);
+    var auth = require('./lib/auth')(request.session, users);
     if (auth.loggedIn() && auth.isAdmin()) {
         var fixtures = require('./lib/fixtures')(db);
         response.setHeader('Content-Type', 'application/json');
@@ -289,10 +306,36 @@ app.post('/activateSeason', function(request, response, next){
     }
 });
 
+app.post('/savePredictions', function(request, response, next){
+    console.log(request.body);
+    var auth = require('./lib/auth')(request.session, users);
+    if (auth.loggedIn()) {
+        var fixtures = require('./lib/fixtures')(db);
+        response.setHeader('Content-Type', 'application/json');
+        fixtures.getCurrentSeason(
+            function(e) {
+                console.log('\nERROR\n');
+                console.log(e);
+                response.end(JSON.stringify({
+                    error: e
+                }));
+            }, 
+            function(season) {
+                users.saveUserPredictions(request.body, season, function(e){
+                    response.end(); 
+                });
+            }
+        );
+    }
+    else {
+        pages.indexRedirect(response);
+    }
+});
 /*
 * Error Handling
 */
 function errorHandler(e, request, response, next) {
+    console.log(e);
     response.status(500);
     pages.error(response, e);
 }

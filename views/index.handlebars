@@ -26,6 +26,56 @@
 		</form>
 	{{/if}}
 
-    <h1>Your Node Express App</h1>
+    <div class="alpha">Yellalee's NCFC Prediction League</div>
 
+    {{#if auth.loggedIn}}
+
+	<div id="first" class="grid">
+		<div class="grid__item five-eighths">
+			<span class="delta">Predictions for {{season.name}}</span>
+		</div><!--
+	 --><div class="grid__item three-eighths">
+			<button type="button" class="btn btn--small btn--negative post-predictions hidden">Save Predictions</button>
+		</div>
+	</div>
+	
+	{{#each season.miniseasons}}
+	<div class="grid page-block eleven-twelfths miniseason-block">
+		<div class="grid__item one-whole">
+			<span class="delta">Miniseason {{index}} - Deadline {{deadline}}{{#if open}}{{else}} (closed){{/if}}</span>
+		</div><!--
+		{{#each fixtures}}
+	 --><div class="fixture-block"><!--
+	 	 --><div class="grid__item three-eighths fixture-team">
+	 	 		{{team}}
+			</div><!--
+		 --><div class="grid__item one-eighth fixture-venue">
+		 		({{venue}})
+		 	</div><!--
+	 	 --><div class="grid__item four-eighths">
+	 	 		{{#if ../open}}
+				<select class="enable-save fixture-prediction">
+					<option></option>
+					<option{{#compare prediction '==' 'Win'}} selected{{/compare}}>Win</option>
+					<option{{#compare prediction '==' 'Draw'}} selected{{/compare}}>Draw</option>
+					<option{{#compare prediction '==' 'Lose'}} selected{{/compare}}>Lose</option>
+				</select>
+				{{else}}
+					*{{prediction}}*
+	 	 		{{/if}}
+			</div><!--
+	 --></div><!--			 
+		{{/each}}
+ --></div>
+	{{/each}}
+
+    {{/if}}
 </div>
+
+<div>
+	<button type="button" class="btn btn--negative post-predictions hidden">Save Predictions</button>
+</div>
+
+<script>
+	$(document).ready(jsInit);
+</script>
