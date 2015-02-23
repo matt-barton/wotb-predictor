@@ -11,11 +11,31 @@ var bodyParser = require('body-parser');
 /*
 * Database
 */
-var allDbConfigs = require('./db.config.json');
-var dbConfig = allDbConfigs[allDbConfigs.useConfig];
 var cradle = require('cradle');
-var db = new(cradle.Connection)(dbConfig.host, dbConfig.port, dbConfig.options)
-    .database(dbConfig.db);
+var dbHost, dbPort, dbOptions, dbDatabase;
+dbOptions = {};
+if (process.env.NODE_ENV === 'production') {
+    dbHost = process.env.PROD_COUCH_HOST;
+    dbPort = process.env.PROD_COUCH_PORT;
+    dbDatabase = process.env.PROD_COUCH_DB;
+    obOptions.auth = {
+        "username": process.env.PROD_COUCH_USERNAME,
+        "password": process.env.PROD_COUCH_PASSWORD
+    };
+}
+else {
+    dbHost = process.env.DEV_COUCH_HOST;
+    dbPort = process.env.DEV_COUCH_PORT;
+    dbDatabase = process.env.DEV_COUCH_DB;
+    if (process.env.DEV_COUCH_USERNAME != null) {
+        obOptions.auth = {
+            "username": process.env.DEV_COUCH_USERNAME,
+            "password": process.env.DEV_COUCH_PASSWORD
+        };
+    }
+}
+var db = new(cradle.Connection)(dbHost, dbPort, dbOptions)
+    .database(dbDatabase);
 
 /*
 * Libraries
