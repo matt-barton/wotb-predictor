@@ -1,5 +1,6 @@
 module.exports = {
   _id: "_design/user",
+  language: "javascript",
 
   views: {
 
@@ -9,9 +10,7 @@ module.exports = {
         if (doc.type && doc.type == 'user' && !doc.disabled) {
           emit(doc.username.toLowerCase(), doc);
         }
-      },
-
-      reduce: function() {}
+      }
     },
 
     predictionsByUserId: {
@@ -20,9 +19,7 @@ module.exports = {
         if (doc.type && doc.type == 'user' && !doc.disabled) {
           emit(doc._id, doc.predictions);
         }
-      },
-
-      reduce: function() {}
+      }
     }
   }
 };

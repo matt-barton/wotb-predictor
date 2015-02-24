@@ -1,5 +1,6 @@
 module.exports = {
   _id: "_design/fixtures",
+  language: "javascript",
 
   views: {
 
@@ -9,9 +10,7 @@ module.exports = {
         if (doc.type && doc.type == 'season' && doc.current) {
           emit(doc.name, doc);
         }
-      },
-
-      reduce: function() {}
+      }
     },
 
     notCurrentSeasons: {
@@ -20,9 +19,7 @@ module.exports = {
         if (doc.type && doc.type == 'season' && !doc.current) {
           emit(doc.name, doc);
         }
-      },
-
-      reduce: function() {}
+      }
     },
 
     byId: {
@@ -31,9 +28,7 @@ module.exports = {
         if (doc.type && doc.type == 'season') {
           emit(doc._id, doc);
         }
-      },
-
-      reduce: function() {}
+      }
     },
 
     allSeasonNames: {
@@ -42,9 +37,7 @@ module.exports = {
         if (doc.type && doc.type == 'season') {
           emit(doc._id, doc.name);
         }
-      },
-
-      reduce: function() {}
+      }
     }
   }
 };
