@@ -11,7 +11,7 @@ module.exports = {
         }
       },
 
-      reduce: null
+      reduce: function() {}
     },
 
     predictionsByUserId: {
@@ -22,7 +22,7 @@ module.exports = {
         }
       },
 
-      reduce: null
+      reduce: function() {}
     }
   }
 };

@@ -11,7 +11,7 @@ module.exports = {
         }
       },
 
-      reduce: null
+      reduce: function() {}
     },
 
     notCurrentSeasons: {
@@ -22,7 +22,7 @@ module.exports = {
         }
       },
 
-      reduce: null
+      reduce: function() {}
     },
 
     byId: {
@@ -33,7 +33,7 @@ module.exports = {
         }
       },
 
-      reduce: null
+      reduce: function() {}
     },
 
     allSeasonNames: {
@@ -44,9 +44,7 @@ module.exports = {
         }
       },
 
-      reduce: null
+      reduce: function() {}
     }
-
-
   }
 };
