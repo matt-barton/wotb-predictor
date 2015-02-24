@@ -5,12 +5,15 @@
 </div>
 
 <div id="options">
+	{{#compare season.current '!=' false}}
 	<a href="/admin/fixtures?action=new-game" id="new-game-link">Setup New Game</a>
-	
+	{{/compare}}
+
 	{{#compare season.current '==' false}}
-	{{#compare season._id '!=' null}}
-	<a href="#" id="make-game-current-link">Activate this game</a>
-	{{/compare}}{{/compare}}
+		{{#compare season._id '!=' null}}
+		<a href="#" id="make-game-current-link">Activate this game</a>
+		{{/compare}}
+	{{/compare}}
 	{{#compare allSeasonNames.length '>' 1}}
 	<a href="#" id="edit-other-game">Edit Different Game</a>
 	{{/compare}}

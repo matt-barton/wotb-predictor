@@ -30,6 +30,7 @@
 
     {{#if auth.loggedIn}}
 
+    {{#if season.current}}
 	<div id="first" class="grid">
 		<div class="grid__item five-eighths">
 			<span class="delta">Predictions for {{season.name}}</span>
@@ -69,7 +70,13 @@
  --></div>
 	{{/each}}
 
+	{{else}}
+		<div class="game-not-ready">
+			We're not quite ready to accept your predictions yet.  Keep an eye on WotB for announcements.
+		</div>
+	{{/if}}
     {{/if}}
+	
 </div>
 
 <div>

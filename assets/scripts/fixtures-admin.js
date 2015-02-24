@@ -2,6 +2,7 @@ function fixturesAdminInit() {
 
 	var displaySaveButtons = function() {
 		$('.post-fixtures').show();
+		$('#make-game-current-link').hide();
 	}
 
 	$('input.enable-save').on('keyup', displaySaveButtons);
@@ -313,6 +314,23 @@ function fixturesAdminInit() {
 	});
 
 	$('#make-game-current-link').click(function(){
+
+		var ok = true;
+		var miniseasons = $('.season-block');
+		for (var x=0; x<miniseasons.length; x++) {
+			var miniseason = miniseasons[x];
+			var deadlineField = $('.miniseason-deadline', miniseason);
+			if (deadlineField.val().trim() == '') ok = false;
+			var fixtures = $('.fixture-block', miniseason);
+			if (fixtures.length == 0) ok = false;
+		}
+
+		if (!ok) {
+			return $.notify('Cannot make game active until every mini-season has a deadline and at least one fixture.', 'error');
+		}
+
+		if (!confirm('Game will become read-only once active, so only proceed if you\'re sure all the fixtures are right.')) return;
+
 		$.blockUI({
 			css: { 
 	            border: 'none', 
