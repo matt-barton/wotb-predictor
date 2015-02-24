@@ -4,6 +4,11 @@ function jsInit() {
 		$('.post-predictions').show();
 	}
 
+	var hideSaveButtons = function() {
+		$('.post-predictions').hide();
+	}
+
+
 	$('.enable-save').on('change', displaySaveButtons);
 
 	// save predictions buttons
@@ -17,7 +22,9 @@ function jsInit() {
 			var fixtures = $('.fixture-block', miniSeasonDiv);
 			for (var y = 0; y < fixtures.length; y++) {
 				var fixtureDiv = fixtures[y];
-				var prediction = $('.fixture-prediction', fixtureDiv).val();
+				var predictionControl = $('.fixture-prediction', fixtureDiv);
+				if (predictionControl.length == 0) continue;
+				var prediction = predictionControl.val();
 				if (prediction.length == 0) continue;
 				predictions[predictions.length] = {
 					team: $('.fixture-team', fixtureDiv)
@@ -70,7 +77,8 @@ function jsInit() {
 					}
 					else {
 						$.unblockUI();
-						$.notify('Predictions saved.', 'success');
+						if (result.message) $.notify(result.message, 'success');
+						hideSaveButtons();
 					}
 				}
 			},

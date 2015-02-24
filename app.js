@@ -307,23 +307,32 @@ app.post('/activateSeason', function(request, response, next){
 });
 
 app.post('/savePredictions', function(request, response, next){
-    console.log(request.body);
     var auth = require('./lib/auth')(request.session, users);
     if (auth.loggedIn()) {
+        var onError = function(e) {
+            console.log('\nERROR\n');
+            console.log(e);
+            response.end(JSON.stringify({
+                error: e
+            }));
+        }
         var fixtures = require('./lib/fixtures')(db);
         response.setHeader('Content-Type', 'application/json');
-        fixtures.getCurrentSeason(
-            function(e) {
-                console.log('\nERROR\n');
-                console.log(e);
-                response.end(JSON.stringify({
-                    error: e
-                }));
-            }, 
-            function(season) {
-                users.saveUserPredictions(request.body, season, function(e){
-                    response.end(); 
-                });
+        users.getUserByUsername(
+            auth.username(), 
+            onError,
+            function(user) {
+                fixtures.getCurrentSeason(
+                    onError, 
+                    function(season) {
+                        users.saveUserPredictions(request.body, season, user, function(e, message){
+                            if (e) return onError(e);
+                            response.end(JSON.stringify({
+                                message: message
+                            })); 
+                        });
+                    }
+                );
             }
         );
     }
