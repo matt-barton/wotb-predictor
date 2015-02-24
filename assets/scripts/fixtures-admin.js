@@ -381,7 +381,7 @@ function fixturesAdminInit() {
 	            color: '#fff' 
     		}
     	});
-		window.location.href = '{{editChosenGameUrl}}' + chosenGame;
+		window.location.href = $('#editSeasonUrl').val() + chosenGame;
 	};
 
 	gameChoiceDialog.dialog({
