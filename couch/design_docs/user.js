@@ -20,6 +20,14 @@ module.exports = {
           emit(doc._id, doc.predictions);
         }
       }
+    },
+
+    all: {
+      map: function(doc) {
+        if (doc.type && doc.type == 'user' && !doc.disabled) {
+          emit(doc._id, doc);
+        }
+      }
     }
   }
 };
