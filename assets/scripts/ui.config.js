@@ -4,13 +4,6 @@ $.datepicker.setDefaults({
 	minDate: 0
 });
 
-$.notify.defaults({
-	elementPosition:	'top left',
-	globalPosition:		'top left',
-	style:				'bootstrap',
-	arrowSize:          10
-});
-
 function notifyBar(message, style, title) {
 	title = title || 
 		style == 'success' 

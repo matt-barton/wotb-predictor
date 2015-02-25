@@ -64,11 +64,11 @@ function jsInit() {
 					$.unblockUI();
 					if ($.isArray(result.error)) {
 						result.error.forEach(function(eachError){
-							$.notify(eachError, 'error');
+							notifyBar(eachError, 'error');
 						});
 					}
 					else {
-						$.notify(result.error, 'error');
+						notifyBar(result.error, 'error');
 					}
 				}
 				else {
@@ -77,14 +77,14 @@ function jsInit() {
 					}
 					else {
 						$.unblockUI();
-						if (result.message) $.notify(result.message, 'success');
+						if (result.message) notifyBar(result.message, 'success');
 						hideSaveButtons();
 					}
 				}
 			},
 			error: function(jqXHR, status, error){
 				$.unblockUI();
-				$.notify('Cannot save predictions. There was an error.', 'error');
+				notifyBar('Cannot save predictions. There was an error.', 'error');
 			}
 		});
 	});
