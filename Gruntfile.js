@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
     // load all grunt tasks
     require('load-grunt-tasks')(grunt);
+    grunt.loadNpmTasks('grunt-contrib-less');
 
     grunt.initConfig({
 
@@ -92,6 +93,18 @@ module.exports = function (grunt) {
                     src: ['screen.scss'],
                     ext: '.css'
                 }]
+            }
+        },
+
+        // Less config
+        less: {
+            dev: {
+                options: {
+                    compress: true
+                },
+                files: {
+                  "assets/styles/stashy.css": "assets/styles/less/Stashy.less"
+                }
             }
         },
 
@@ -260,6 +273,7 @@ module.exports = function (grunt) {
     // Workon
     grunt.registerTask('workon', 'Start working on this project.', [
         'sass:dev',
+        'less:dev',
         'express:dev',
         'watch'
     ]);

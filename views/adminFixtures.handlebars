@@ -45,6 +45,9 @@
 <input type="hidden" id="seasonId" value="{{season._id}}" />
 <input type="hidden" id="message" value="{{message}}" />
 <input type="hidden" id="editSeasonUrl" value="{{editChosenGameUrl}}" />
+{{#compare season.current '==' true}}
+<input type="hidden" id="seasonCurrent" value="{{#compare season.current '==' true}}1{{/compare}}" />
+{{/compare}}
 
 {{#each season.miniseasons}}
 <div class="grid page-block eleven-twelfths season-block">
