@@ -38,7 +38,16 @@
         <![endif]-->
 
         <header>
-            <a href="#" class="brand"></a>
+            <div id="header" style="top:0px!important;">
+                <div id="header_inn">
+                    
+                  <div id="top_logo"> <a href="#home_top" class="scroll">&nbsp;</a>
+                        <div class="clr"></div>
+                    </div><!-- end div #top_logo -->
+                    <div class="clr"></div>
+                </div><!-- end div #header_inn-->
+                <div class="clr"></div>
+            </div>
             <ul class="nav">
                 <li class="active"><a href="/">Home</a></li>
                 <li><a href="#">About</a></li>
@@ -46,8 +55,10 @@
             </ul>
         </header>
 
+        <div class="container">
         {{{ body }}}
-
+        </div>
+        
         <footer>
            Footer Content 
         </footer>
@@ -61,6 +72,17 @@
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
+
+        {{#if auth.loggedIn}}
+
+        <script>
+        $(document).ready(function(){
+            $('header ul.nav')
+                .append($('<li><a href="/signOut" id="signout">Sign Out</a></li>'));
+        });
+
+        </script>
+        {{/if}}
 
     </body>
 </html>

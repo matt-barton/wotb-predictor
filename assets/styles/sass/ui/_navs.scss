@@ -7,8 +7,15 @@
 */
 
 
+.nav {
+	margin-top: 120px;
+	z-index: 101;
+	position: fixed;
+}
 
-
+.nav a {
+	color: $black;
+}
 
 /*------------------------------------*\
     $NAV PRIMARY
