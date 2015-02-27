@@ -1,8 +1,4 @@
 <h1>Register</h1>
-<ol class="nav breadcrumb">
-	<li><a href="/">Home</a></li>
-	<li>Register</li>
-</ol>
 
 <div class="notice">
 Register using your Wrath Of The Barclay username.  Please don't use someone else's username for a "joke". They'll notice, and then it'll be hassle to delete your account, etc.
@@ -33,17 +29,20 @@ $(document).ready(function() {
 
     username.on('keydown', function() {
         $('.auto-image', $(this).parent()).remove();
+        $(this).removeClass('warning-field');
     });
 
     username.on('blur', function() {
         $.getJSON('/jsonCheckUserName', {
             username: username.val()
         }, function(result){
-            var src = '/images/' + (result.valid ? 'green-tick.png' : 'error.png');
             var title = result.valid ? 'Username OK.' : 'Username is already in use.';
+            var classname = result.valid ? 'fa-check success-icon' : 'fa-remove warning-icon';
             username
                 .parent()
-                .append('<img class="auto-image" src="' + src + '" title="' + title + '" style="vertical-align: middle" />');
+                .append('<i class="auto-image fa fa-large ' + classname + '" title="' + title + '" />');
+
+            if (!result.valid) username.addClass('warning-field')
         });
     });
 

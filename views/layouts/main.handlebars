@@ -51,7 +51,6 @@
             <ul class="nav">
                 <li class="active"><a href="/">Home</a></li>
                 <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
             </ul>
         </header>
 
@@ -73,16 +72,19 @@
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
 
-        {{#if auth.loggedIn}}
-
         <script>
         $(document).ready(function(){
-            $('header ul.nav')
-                .append($('<li><a href="/signOut" id="signout">Sign Out</a></li>'));
-        });
+        {{#if auth.loggedIn}}
+            $('header ul.nav').append($('<li><a href="/signOut">Sign Out</a></li>'));
 
-        </script>
+        {{#if auth.admin}}
+            $('header ul.nav').append($('<li><a href="/admin">Admin</a></li>'));
         {{/if}}
+        {{else}}
+            $('header ul.nav').append($('<li><a href="/register">Register</a></li>'));
+        {{/if}}
+        });
+        </script>
 
     </body>
 </html>

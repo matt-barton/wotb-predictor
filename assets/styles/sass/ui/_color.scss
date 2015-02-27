@@ -65,9 +65,10 @@ body                                { color: $gray5; }
 .hover-color5:hover,
 .hover-color5.active                { color: $color5 !important; }
 
+.warning-icon						{ color: $warning-icon; }
+.warning-field						{ background-color: $warning-field; color: $black; }
 
-
-
+.success-icon						{ color: $success-icon; }
 
 /*------------------------------------*\
     $BACKGROUND
