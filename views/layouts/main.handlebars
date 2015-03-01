@@ -41,18 +41,17 @@
             <div id="header" style="top:0px!important;">
                 <div id="header_inn">
                     
-                  <div id="top_logo"> <a href="#home_top" class="scroll">&nbsp;</a>
+                  <div id="top_logo"><a href="#home_top" class="scroll">&nbsp;</a>
                         <div class="clr"></div>
                     </div><!-- end div #top_logo -->
                     <div class="clr"></div>
                 </div><!-- end div #header_inn-->
                 <div class="clr"></div>
             </div>
-            <ul class="nav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="#">About</a></li>
-            </ul>
         </header>
+
+        <ul id="header-nav" class="nav nav--block">
+        </ul>
 
         <div class="container">
         {{{ body }}}
@@ -74,15 +73,18 @@
 
         <script>
         $(document).ready(function(){
-        {{#if auth.loggedIn}}
-            $('header ul.nav').append($('<li><a href="/signOut">Sign Out</a></li>'));
+            $('#header-nav').append($('<li><a href="/">Home</a></li>'));
+            $('#header-nav').append($('<li><a href="#">About</a></li>'));
+            {{#if auth.loggedIn}}
+            $('#header-nav').append($('<li><a href="/signOut">Sign Out</a></li>'));
 
-        {{#if auth.admin}}
-            $('header ul.nav').append($('<li><a href="/admin">Admin</a></li>'));
-        {{/if}}
-        {{else}}
-            $('header ul.nav').append($('<li><a href="/register">Register</a></li>'));
-        {{/if}}
+            {{#if auth.isAdmin}}
+            $('#header-nav').append($('<li><a href="/admin">Admin</a></li>'));
+            {{/if}}
+            {{else}}
+            $('#header-nav').append($('<li><a href="/register">Register</a>'));
+            {{/if}}
+            $('#header-nav').append($('<li><a href="/table">League Table</a>'));
         });
         </script>
 
