@@ -134,6 +134,10 @@ app.get('/register', function(request, response, next) {
     pages.register(response);
 });
 
+app.get('/table', function(request, response, next) {
+    pages.leagueTable(response);
+});
+
 app.get('/jsonCheckUsername', function(request, response, next){
     var auth = require('./lib/auth')(request.session, users);
     response.setHeader('Content-Type', 'application/json');
