@@ -3,5 +3,21 @@
 {{#compare season.current '==' false}}
 No active season to report on.
 {{else}}
-REPORT!
+
+{{#each miniseasons}}
+<div class="season-block">
+	<div>
+		Mini-Season {{index}}
+	</div>
+	<div>
+		Users with incomplete predictions
+	</div>
+	<div>
+		{{#each incompletePredictions}}
+		<div>{{this}}</div>
+		{{/each}}
+	</div>
+</div>
+{{/each}}
+
 {{/compare}}

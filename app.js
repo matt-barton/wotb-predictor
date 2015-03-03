@@ -135,7 +135,8 @@ app.get('/register', function(request, response, next) {
 });
 
 app.get('/table', function(request, response, next) {
-    pages.leagueTable(response);
+    var auth = require('./lib/auth')(request.session, users);
+    pages.leagueTable(response, auth);
 });
 
 app.get('/jsonCheckUsername', function(request, response, next){
