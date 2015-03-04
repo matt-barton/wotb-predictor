@@ -48,3 +48,13 @@ iframe#league-table {
 	width: 100%;
 	height: 2725px;
 } 
+
+div.prediction {
+	background-color:	$color3;
+	border:				1px solid $black;
+	-moz-border-radius: 15px;
+	border-radius: 		15px;
+	padding:			10px;
+	margin:				2px;
+	overflow:			hidden;
+}

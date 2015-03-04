@@ -5,19 +5,49 @@ No active season to report on.
 {{else}}
 
 {{#each miniseasons}}
-<div class="season-block">
-	<div>
+<div class="grid page-block eleven-twelfths miniseason-block">
+	<div class="grid__item one-half">
 		Mini-Season {{index}}
-	</div>
-	<div>
-		Users with incomplete predictions
-	</div>
-	<div>
+	</div><!--
+ --><div class="grid__item one-half">
+		Deadline: {{deadline}}
+	</div><!--
+	{{#compare incompletePredictions.length '>' 0}}
+ --><div class="grid__item one-whole">
+		There {{#compare incompletePredictions.length '>' 1}}are{{else}}is{{/compare}} {{incompletePredictions.length}} player{{#compare incompletePredictions.length '>' 1}}s{{/compare}} with incomplete predictions <a href="#" data-index="{{index}}" class="incomplete-predictions-toggle">[show]</a>
+	</div><!--
+ --><div class="grid__item one-whole incomplete-predictions-area hidden" data-index="{{index}}">
+		<div class="grid"><!--
 		{{#each incompletePredictions}}
-		<div>{{this}}</div>
+		 --><div class="grid__item one-eighth">{{this}}</div><!--
 		{{/each}}
-	</div>
-</div>
+	 --></div>
+	</div><!--
+	{{/compare}}
+	{{#compare completePredictions.length '>' 0}}
+ --><div class="grid__item one-whole">
+ 		Completed Predictions (<a href="/admin/reports/predictionsTable?ms={{index}}">view table format</a>)
+ 	</div><!--
+ --><div class="grid__item one-whole">
+ 		<div class="grid"><!--
+	 	{{#each completePredictions}}
+	 	 --><div class="grid__item one-eighth prediction prediction-small" data-miniseason="{{../index}}" data-user="{{user}}">
+	 	 		<strong>{{user}}</strong>
+	 	 		<div class="hidden prediction-details">
+	 	 			{{#each predictions}}
+	 	 				<div>{{team}} ({{venue}}) - {{prediction}}</div>
+	 	 			{{/each}}
+	 	 		</div>
+	 	 	</div><!--
+ 		{{/each}}
+ 	 --></div>
+ 	</div><!--
+	{{/compare}}
+--></div>
 {{/each}}
 
 {{/compare}}
+
+<script>
+$(document).ready(initPredictionsReport);
+</script>
