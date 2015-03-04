@@ -1,0 +1,38 @@
+<h1>Player Predictions</h1>
+
+{{#compare season.current '==' false}}
+No active season to report on.
+{{else}}
+
+{{#each miniseasons}}
+<table class="pred">
+	<tr>
+		<th></th>
+		{{#each fixtures}}
+			<th class="pred"><span>{{team}} ({{venue}})</span></th>
+		{{/each}}
+	</tr>
+	{{#each completePredictions}}
+	<tr>
+		<td>{{user}}</td>
+		{{#each predictions}}
+		<td>{{prediction}}</td>
+		{{/each}}
+	</tr>
+	{{/each}}
+</table>
+{{/each}}
+
+{{/compare}}
+
+<script>
+$(document).ready(function(){
+	var header_height = 0;
+    $('table th.pred span').each(function() {
+        if ($(this).outerWidth() > header_height) header_height = $(this).outerWidth();
+        $(this).width($(this).height());
+    });
+
+    $('table th.pred').height(header_height);
+});
+</script>

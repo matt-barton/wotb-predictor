@@ -284,6 +284,13 @@ app.get('/admin/reports/predictions', function(request, response, next) {
     });
 });
 
+app.get('/admin/reports/predictionsTable', function(request, response, next) {
+    var auth = require('./lib/auth')(request.session, users);
+    pages.admin.reports.predictions(response, auth, db, function(e) {
+        if (e) return next(e);
+    }, 'table', request.query.ms == null ? null : request.query.ms);
+});
+
 app.post('/activateSeason', function(request, response, next){
     var auth = require('./lib/auth')(request.session, users);
     if (auth.loggedIn() && auth.isAdmin()) {

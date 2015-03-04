@@ -58,3 +58,22 @@ div.prediction {
 	margin:				2px;
 	overflow:			hidden;
 }
+
+table.pred {
+	width: auto;
+}
+
+th.pred {
+    vertical-align:	bottom;
+	text-align: 	left;
+}
+
+th.pred span {
+	margin-bottom:		10px;
+	writing-mode:		tb-rl;
+	filter:				flipv fliph;
+	-webkit-transform:	rotate(-90deg);
+	-moz-transform:		rotate(-90deg);
+	white-space:		nowrap; 
+	display:			block;
+}
