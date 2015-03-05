@@ -35,6 +35,14 @@ function initPredictionsReport() {
 		}
 	});
 
+	var fromDateField = $('#from-date');
+	if (fromDateField.val() != '') {
+		$('.table-format-link').each(function() {
+			$(this).prop('href', 
+				$(this).prop('href') + '&from=' + fromDateField.val());
+		})
+	}
+
 	$('#from-date').datepicker({
 		minDate: null
 	});

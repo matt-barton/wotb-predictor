@@ -6,7 +6,7 @@ No active season to report on.
 
 <div class="grid page-block eleven-twelfths">
 	<div class="grid__item one-whole">
-		Show predictions made since: <input type="text" id="from-date" /><button class="btn btn--small btn--positive" id="from-date-btn">Go</button>
+		Show predictions made since: <input type="text" id="from-date" value="{{fromDate}}" /><button class="btn btn--small btn--positive" id="from-date-btn">Go</button>
 	</div>
 </div>
 
@@ -32,7 +32,7 @@ No active season to report on.
 	{{/compare}}
 	{{#compare completePredictions.length '>' 0}}
  --><div class="grid__item one-whole">
- 		Completed Predictions (<a href="/admin/reports/predictionsTable?ms={{index}}">view table format</a>)
+ 		Completed Predictions (<a href="/admin/reports/predictionsTable?ms={{index}}" class="table-format-link">view table format</a>)
  	</div><!--
  --><div class="grid__item one-whole">
  		<div class="grid"><!--
