@@ -34,4 +34,18 @@ function initPredictionsReport() {
 			details.hide('slow');
 		}
 	});
+
+	$('#from-date').datepicker({
+		minDate: null
+	});
+
+	$('#from-date-btn').click(function(){
+		try {
+			var url = window.location.pathname + '?from=' + new Date($('#from-date').val()).toJSON();
+			window.location = url;
+		}
+		catch(e) {
+			alert ('That didn\'t work.');
+		}
+	});
 }

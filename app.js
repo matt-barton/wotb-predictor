@@ -279,16 +279,30 @@ app.post('/saveFixtures', function(request, response, next){
 
 app.get('/admin/reports/predictions', function(request, response, next) {
     var auth = require('./lib/auth')(request.session, users);
+    var from = null;
+    if (request.query.from) {
+        try {
+            from = new Date(request.query.from);
+        }
+        catch(e){}
+    }
     pages.admin.reports.predictions(response, auth, db, function(e) {
         if (e) return next(e);
-    });
+    }, from);
 });
 
 app.get('/admin/reports/predictionsTable', function(request, response, next) {
     var auth = require('./lib/auth')(request.session, users);
+    var from = null;
+    if (request.query.from) {
+        try {
+            from = new Date(request.query.from);
+        }
+        catch(e){}
+    }
     pages.admin.reports.predictions(response, auth, db, function(e) {
         if (e) return next(e);
-    }, 'table', request.query.ms == null ? null : request.query.ms);
+    }, from, 'table', request.query.ms == null ? null : request.query.ms);
 });
 
 app.post('/activateSeason', function(request, response, next){

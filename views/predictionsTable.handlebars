@@ -4,6 +4,12 @@
 No active season to report on.
 {{else}}
 
+<div class="grid page-block eleven-twelfths">
+	<div class="grid__item one-whole">
+		Show predictions made since: <input type="text" id="from-date" /><button class="btn btn--small btn--positive" id="from-date-btn">Go</button>
+	</div>
+</div>
+
 {{#each miniseasons}}
 <h2>{{../season.name}} - Mini-Season {{index}}</h2>
 <table class="pred">
@@ -35,5 +41,19 @@ $(document).ready(function(){
     });
 
     $('table th.pred').height(header_height);
+
+	$('#from-date').datepicker({
+		minDate: null
+	});
+
+	$('#from-date-btn').click(function(){
+		try {
+			var url = window.location.pathname + '?ms={{requestedMiniseason}}&from=' + new Date($('#from-date').val()).toJSON();
+			window.location = url;
+		}
+		catch(e) {
+			alert ('That didn\'t work.');
+		}
+	});
 });
 </script>
