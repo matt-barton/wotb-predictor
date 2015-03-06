@@ -1,0 +1,122 @@
+<span class="alpha">Fixtures Administration</span>
+
+<div class="float--right">
+	<button type="button" class="btn btn--negative post-fixtures hidden">Save Details</button>
+</div>
+
+<div id="options">
+	{{#compare season.current '!=' false}}
+	<a href="/admin/fixtures?action=new-game" id="new-game-link">Setup New Game</a>
+	{{/compare}}
+
+	{{#compare season.current '==' false}}
+		{{#compare season._id '!=' null}}
+		<a href="#" id="make-game-current-link">Activate this game</a>
+		{{/compare}}
+	{{/compare}}
+	{{#compare allSeasonNames.length '>' 1}}
+	<a href="#" id="edit-other-game">Edit Different Game</a>
+	{{/compare}}
+</div>
+
+<div id="game-choice-dialog" class="hidden">
+	Chose: 
+	<select id="game-choice-select">
+	{{#each allSeasonNames}}
+	{{#compare currentSeasonId '!=' id}}
+	<option value="{{id}}">{{value}}</option>
+	{{/compare}}
+	{{/each}}
+	</select>
+</div>
+
+<div id="first" class="grid page-block eleven-twelfths">
+	<div class="grid__item one-whole">
+		<span class="delta">{{gameTypeLabel}}</span>
+	</div><!--
+ --><div class="grid__item one-quarter">
+ 		Name
+ 	</div><!--
+  --><div class="grid__item one-quarter">
+		<input type="text" class="enable-save" value="{{season.name}}" id="seasonName" size="12" />
+	</div>
+</div>
+
+<input type="hidden" id="seasonId" value="{{season._id}}" />
+<input type="hidden" id="message" value="{{message}}" />
+<input type="hidden" id="editSeasonUrl" value="{{editChosenGameUrl}}" />
+{{#compare season.current '==' true}}
+<input type="hidden" id="seasonCurrent" value="{{#compare season.current '==' true}}1{{/compare}}" />
+{{/compare}}
+
+{{#each season.miniseasons}}
+<div class="grid page-block eleven-twelfths season-block">
+	<div class="grid__item one-whole">
+		<span class="delta">{{name}}</span>
+	</div><!--
+ --><div class="grid__item one-third">
+		<span class="Epsilon">Predictions Deadline</span>
+	</div><!--
+ --><div class="grid__item two-thirds">
+		<input type="text" class="miniseason-deadline text-input enable-save" id="{{miniseasonHtmlId}}-deadline" value="{{deadline}}" size="12" readonly="readonly" />
+	</div><!--
+ --><div class="grid__item one-third">
+		<span class="epsilon">Fixtures</span>
+	</div><!--
+ --><div class="grid__item two-thirds">
+		<div class="grid" id="{{miniseasonHtmlId}}-fixtures-grid"><!--
+			{{#each fixtures}}
+		 --><div class="fixture-block"><!--
+		 	 --><div class="grid__item three-eighths">
+					<input type="text" id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-team" class="fixture-team input-text fixture-input enable-save" size="12" value="{{team}}" />
+				</div><!--
+		 	 --><div class="grid__item two-eighths">
+					<select id="{{miniseasonHtmlId}}-{{fixtureHtmlId}}-fixture-venue" class="fixture-venue fixture-input enable-save">
+						<option{{#compare venue '==' 'H'}} selected{{/compare}}>H</option>
+						<option{{#compare venue '==' 'A'}} selected{{/compare}}>A</option>
+					</select>
+				</div><!--
+		 	 --><div class="grid__item three-eighths">
+					<i class="fa fa-times wotb-delete-fixture pointer" title="Delete Fixture"></i>
+				</div><!--
+		 --></div><!--
+		 	{{else}}
+		 --><div id="{{miniseasonHtmlId}}-no-fixtures-div" class="grid__item one-whole">
+		 		No fixtures yet.
+		 	</div><!--
+			{{/each}}
+		 --><div class="grid__item one-whole">
+		 		<i class="fa fa-plus wotb-trigger-add-controls pointer" id="{{miniseasonHtmlId}}-trigger-add-controls"></i><span class="wotb-trigger-add-controls pointer" id="{{miniseasonHtmlId}}-trigger-add-text"> Add Fixture</span>
+		 	</div><!--
+	 --></div>
+	</div><!--
+ --><div class="grid__item one-third add-fixture-controls-{{miniseasonHtmlId}}" style="display: none;"></div><!--
+ --><div class="grid__item two-thirds add-fixture-controls-{{miniseasonHtmlId}}" style="display: none;">
+ 		<div class="grid"><!--
+		 --><div class="grid__item three-eighths">
+				<label class="epsilon">Team</label>
+				<input type="text" size="12" class="fixture-team fixture-input text-input" id="{{miniseasonHtmlId}}-add-fixture-team" placeholder="team name" />
+			</div><!--
+		 --><div class="grid__item two-eighths">
+				<label class="epsilon">Home/Away</label>
+				<select id="{{miniseasonHtmlId}}-add-fixture-venue" class="fixture-input">
+					<option></option>
+					<option>H</option>
+					<option>A</option>
+				</select>
+			</div><!--
+		 --><div class="grid__item three-eighths left bottom">
+				<i id="{{miniseasonHtmlId}}-add-fixture-icon" class="fa fa-plus wotb-add-fixture pointer"></i>
+			</div><!--
+	 --></div>
+	</div>
+</div>
+{{/each}}
+
+<div>
+	<button type="button" class="btn btn--negative post-fixtures hidden">Save Details</button>
+</div>
+
+<script>
+	$(document).ready(fixturesAdminInit);
+</script>

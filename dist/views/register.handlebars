@@ -1,0 +1,51 @@
+<h1>Register</h1>
+
+<div class="notice">
+Register using your Wrath Of The Barclay username.  Please don't use someone else's username for a "joke". They'll notice, and then it'll be hassle to delete your account, etc.
+</div>
+
+<form action="/doSignup" method="post">
+    <ul class="form-fields">
+    	<li>
+    		<label>Wroth Username</label>
+    		<input name="username" id="username" type="text" class="text-input" placeholder="username" value="{{username}}"/>
+    	</li>
+    	<li>
+    		<label>Password</label>
+    		<input name="password" id="password" type="password" class="text-input" placeholder="password"/>
+    	</li>
+    	<li>
+    		<label>Repeat Password</label>
+    		<input name="repeat" id="repeat" type="password" class="text-input" placeholder="repeat password"/>
+    	</li>
+    </ul>
+    {{error}}
+    <input type="submit" value="Submit" />
+</form>
+
+<script>
+$(document).ready(function() {
+    var username = $('#username');
+
+    username.on('keydown', function() {
+        $('.auto-image', $(this).parent()).remove();
+        $(this).removeClass('warning-field');
+    });
+
+    username.on('blur', function() {
+        $.getJSON('/jsonCheckUserName', {
+            username: username.val()
+        }, function(result){
+            var title = result.valid ? 'Username OK.' : 'Username is already in use.';
+            var classname = result.valid ? 'fa-check success-icon' : 'fa-remove warning-icon';
+            username
+                .parent()
+                .append('<i class="auto-image fa fa-large ' + classname + '" title="' + title + '" />');
+
+            if (!result.valid) username.addClass('warning-field')
+        });
+    });
+
+    if (username.val()) username.blur();
+});
+</script>
