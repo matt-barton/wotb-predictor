@@ -72,12 +72,12 @@ $debug-mode:            false;
 $responsive:            true;
 
 $brand-color:           #D70014;
-$brand-face:            'Helvetica Neue', sans-serif;
+$brand-face:            'EB Garamond', 'Helvetica Neue', sans-serif;
 
 $base-font-family:      $brand-face;
 
 $base-line-height:      24px;
-
+$base-font-size:        20px;
 $half-spacing-unit: 3px;
 
 /**
@@ -136,6 +136,7 @@ $success-icon:      #37A937;
  */
 $sans-serif:        $brand-face;
 $serif:             "Georgia", serif;
+
 
 /**
  * ^CUSTOM FONT MIXINS 
