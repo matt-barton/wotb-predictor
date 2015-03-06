@@ -9,6 +9,11 @@ var port = 3000;
 var bodyParser = require('body-parser');
 
 /*
+* IP info
+*/
+var ipware = require('ipware')();
+
+/*
 * Database
 */
 var cradle = require('cradle');
@@ -107,13 +112,15 @@ app.use(express.session({secret: 'asd7bjuw3mbd8x7£bbqdkj2!8^*p'}));
 app.get('/', function(request, response, next) {
 
     var auth = require('./lib/auth')(request.session, users);
-
+    var clientIp = ipware.get_ip(request).clientIp;
+console.log(ipware.get_ip(request));
     var onError = function (e){
+        console.log(e);
         return next(e);
     };
 
     if (request.cookies.autologin && !auth.loggedIn()) {
-        auth.doAutoLogin(request.cookies.autologin, function(e) {
+        auth.doAutoLogin(request.cookies.autologin, clientIp, function(e) {
             pages.index(response, auth, db, {}, onError);
         }, function(e) {
             console.log('\nERROR\n');
@@ -180,7 +187,8 @@ app.post('/signIn', function(request, response){
         request.body,
         function(){
             if (request.body.rememberMe) {
-                auth.setLoginCookie(request.body, response, function(){
+                var clientIp = ipware.get_ip(request).clientIp;
+                auth.setLoginCookie(request.body, clientIp, response, function(){
                     pages.indexRedirect(response);
                 });
             }
