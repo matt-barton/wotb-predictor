@@ -13,36 +13,56 @@
     $LOGO
 \*------------------------------------*/
 
+#signin{
+	width:		100%;
+	position:	fixed;
+	height:		200px;
+	z-index:		101;
+	text-align:	left;
+	padding:	10px;
+	font-size:	smaller;
+}
+
+#signin input.sign-in {
+	border:		1px solid black;
+}
+
+#signin .warning {
+	margin-top:		10px;
+	background-color:	$warning-field;
+	display:			inline-block;
+}
+
 #header{
-	width: 100%;
-	position: fixed;
-	height: 200px;
-	background: url(/images/Header.png) repeat-x;
-	z-index: 100;
-	text-align: center;
+	width:		100%;
+	position:	fixed;
+	height:		200px;
+	background:	url(/images/Header.png) repeat-x;
+	z-index:		100;
+	text-align:	center;
 }
 
 #header_inn {
-	width: 950px;
-	position: relative;
-	padding-top: 54px;
-	margin: auto;
+	width:		950px;
+	position:	relative;
+	padding-top:	54px;
+	margin:		auto;
 }
 
 #top_logo {
-	width: 772px;
-	height: 200px;
-	position: absolute;
-	top: 0px;
-	left: 90px;
-	margin-left: 200px;
+	width:		772px;
+	height:		200px;
+	position:	absolute;
+	top:		0px;
+	left:		90px;
+	margin-left:	200px;
 }
 
 #top_logo a {
-	width: 772px;
-	height: 200px;
-	display: block;
-	background: url(/images/ncfc200x200.png) -0px -0px no-repeat;
+	width:		772px;
+	height:		200px;
+	display:		block;
+	background:	url(/images/ncfc200x200.png) -0px -0px no-repeat;
 }
 
 .clr {

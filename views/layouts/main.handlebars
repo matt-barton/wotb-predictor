@@ -40,14 +40,34 @@
         <![endif]-->
 
         <header>
+            <div id="signin" style="top:0px!important;">
+                {{#if auth.loggedIn}}
+                Hello {{auth.username}}!
+                {{else}}
+                <form action="/signIn" method="post">
+                    <div class="float--left">
+                        <input name="username" id="username" type="text" class="text-input sign-in" placeholder="username" value="{{username}}" />
+                        <br/>
+                        <input name="password" id="password" type="password" class="text-input sign-in" placeholder="password"/>
+                    </div>
+                    <div class="float--left">
+                        <input name="rememberMe" id="rememberMe" type="checkbox" class="text-input sign-in" /> Remember Me
+                        <br/>
+                        <input type="submit" class="sign-in" value="Sign In" />
+                    </div>
+                    <div class="clr"></div>
+                    <div class="warning">{{loginError}}</div>
+                </form>
+                {{/if}}
+            </div>
+
             <div id="header" style="top:0px!important;">
                 <div id="header_inn">
-                    
-                  <div id="top_logo"><a href="#home_top" class="scroll">&nbsp;</a>
+                    <div id="top_logo"><a href="#home_top" class="scroll">&nbsp;</a>
                         <div class="clr"></div>
-                    </div><!-- end div #top_logo -->
+                    </div>
                     <div class="clr"></div>
-                </div><!-- end div #header_inn-->
+                </div>
                 <div class="clr"></div>
             </div>
         </header>
@@ -87,6 +107,10 @@
             $('#header-nav').append($('<li><a href="/register">Register</a>'));
             {{/if}}
             $('#header-nav').append($('<li><a href="/table">League Table</a>'));
+
+            if ($('header div.warning').text() != '') {
+                $('header div.warning').css('padding', '5px');
+            }
         });
         </script>
 
