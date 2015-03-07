@@ -161,8 +161,10 @@ app.get('/jsonCheckUsername', function(request, response, next){
 
 app.post('/doSignUp', function(request, response, next) {
     var auth = require('./lib/auth')(request.session, users);
+    var data = request.body;
+    data.clientIp = ipware.get_ip(request).clientIp;
     auth.signUp(
-        request.body, 
+        data, 
         function(){
             pages.indexRedirect(response);
         },
@@ -182,9 +184,10 @@ app.post('/signIn', function(request, response){
     var onError = function (e){
         return next(e);
     };
-
+    var data = request.body;
+    data.clientIp = ipware.get_ip(request).clientIp;
     auth.signIn( 
-        request.body,
+        data,
         function(){
             if (request.body.rememberMe) {
                 var clientIp = ipware.get_ip(request).clientIp;
