@@ -42,7 +42,7 @@
         <header>
             <div id="signin" style="top:0px!important;">
                 {{#if auth.loggedIn}}
-                Hello {{auth.username}}!
+                <span class="btn" style="cursor: default;" href="#"><i class="fa fa-user fa-fw"></i> {{auth.username}}</span> (<a href="/signOut">Sign Out</a>)
                 {{else}}
                 <form action="/signIn" method="post">
                     <div class="float--left">
@@ -98,8 +98,6 @@
             $('#header-nav').append($('<li><a href="/">Home</a></li>'));
             $('#header-nav').append($('<li><a href="#">About</a></li>'));
             {{#if auth.loggedIn}}
-            $('#header-nav').append($('<li><a href="/signOut">Sign Out</a></li>'));
-
             {{#if auth.isAdmin}}
             $('#header-nav').append($('<li><a href="/admin">Admin</a></li>'));
             {{/if}}

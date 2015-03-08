@@ -33,6 +33,19 @@
 	display:			inline-block;
 }
 
+#signin a {
+	color:		$black;	
+}
+
+#signin a:hover {
+	color:		$gray2;
+}
+
+#signin span.btn {
+	color:		$white;
+	border:		1px solid $black;	
+}
+
 #header{
 	width:		100%;
 	position:	fixed;
