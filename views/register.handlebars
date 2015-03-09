@@ -1,5 +1,7 @@
 <h1>Register</h1>
 
+<div class="gamma cookie-warning hidden" id="cookie-notice">This site requires cookies to be enabled in your browser.</div>
+
 <div class="notice">
 Register using your Wrath Of The Barclay username.  Please don't use someone else's username for a "joke". They'll notice, and then it'll be hassle to delete your account, etc.
 </div>
@@ -25,6 +27,13 @@ Register using your Wrath Of The Barclay username.  Please don't use someone els
 
 <script>
 $(document).ready(function() {
+
+    if (!cookieCheck()) {
+        $('#cookie-notice').show();
+        $('form').remove();
+        $('div.notice').remove();
+        return;
+    }
     var username = $('#username');
 
     username.on('keydown', function() {

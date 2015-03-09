@@ -113,7 +113,7 @@ app.get('/', function(request, response, next) {
 
     var auth = require('./lib/auth')(request.session, users);
     var clientIp = ipware.get_ip(request).clientIp;
-console.log(ipware.get_ip(request));
+
     var onError = function (e){
         console.log(e);
         return next(e);
@@ -144,6 +144,11 @@ app.get('/register', function(request, response, next) {
 app.get('/table', function(request, response, next) {
     var auth = require('./lib/auth')(request.session, users);
     pages.leagueTable(response, auth);
+});
+
+app.get('/about', function(request, response, next) {
+    var auth = require('./lib/auth')(request.session, users);
+    pages.about(response, auth);
 });
 
 app.get('/jsonCheckUsername', function(request, response, next){
@@ -208,26 +213,6 @@ app.post('/signIn', function(request, response){
                 username: request.body.username
             }, onError);
         });
-});
-
-app.post('/login', function(request, response, next){
-    var auth = require('./lib/auth')(request.session, users);
-
-    var onError = function (e){
-        return next(e);
-    };
-
-    auth.login(
-        request.body,
-        function(){
-            pages.index(response, auth, db, {}, onError);
-        },
-        function(e){
-            console.log('\nERROR\n');
-            console.log(e);
-            pages.index(response, auth, db, {}, onError);
-        }
-    );
 });
 
 app.get('/signOut', function(request, response, next){
