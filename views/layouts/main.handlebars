@@ -26,6 +26,7 @@
         <script src="/bower_components/jquery-ui/ui/minified/dialog.min.js"></script>
         <script src="/bower_components/jquery.blockUI.js"></script>
         <script src="/bower_components/Stashy.Notify.js"></script>
+        <script src="/bower_components/jquery.cookie.js"></script>
         <script src="/scripts/ui.config.js"></script>
         <script src="/scripts/fixtures-admin.js"></script>
         <script src="/scripts/index.js"></script>
@@ -75,18 +76,21 @@
 
         <script>
         $(document).ready(function(){
+
             $('#header-nav').append($('<li><a href="/">Home</a></li>'));
             $('#header-nav').append($('<li><a href="#">About</a></li>'));
-            {{#if auth.loggedIn}}
-            $('#header-nav').append($('<li><a href="/signOut">Sign Out</a></li>'));
-
-            {{#if auth.isAdmin}}
-            $('#header-nav').append($('<li><a href="/admin">Admin</a></li>'));
-            {{/if}}
-            {{else}}
-            $('#header-nav').append($('<li><a href="/register">Register</a>'));
-            {{/if}}
+            if (cookieCheck()) {
+                {{#if auth.loggedIn}}
+                $('#header-nav').append($('<li><a href="/signOut">Sign Out</a></li>'));
+                {{#if auth.isAdmin}}
+                $('#header-nav').append($('<li><a href="/admin">Admin</a></li>'));
+                {{/if}}
+                {{else}}
+                $('#header-nav').append($('<li><a href="/register">Register</a>'));
+                {{/if}}
+            }
             $('#header-nav').append($('<li><a href="/table">League Table</a>'));
+    
         });
         </script>
 

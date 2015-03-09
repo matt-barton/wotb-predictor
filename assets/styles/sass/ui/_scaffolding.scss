@@ -77,3 +77,12 @@ th.pred span {
 	white-space:		nowrap; 
 	display:			block;
 }
+
+.cookie-warning {
+	width:			100%;
+	text-align:		center;
+	border:			2px solid $black;
+	margin-top:		10px;
+	padding-top:	25px;
+	padding-bottom:	25px;
+}
