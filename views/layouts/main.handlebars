@@ -99,6 +99,8 @@
 
         <script>
         $(document).ready(function(){
+
+            // build navigation
             $('#header-nav').append($('<li><a href="/">Home</a></li>'));
             $('#header-nav').append($('<li><a href="/about">About</a></li>'));
             if (cookieCheck()) {
@@ -111,6 +113,10 @@
                 {{/if}}
             }
             $('#header-nav').append($('<li><a href="/table">League Table</a>'));
+
+            if (!cookieCheck()) {
+                $('header div#signin').remove();
+            }
         });
         </script>
 
