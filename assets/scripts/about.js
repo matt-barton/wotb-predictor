@@ -2,10 +2,12 @@ function aboutInit() {
 
 	var container = $('div#about div#container');
 	
-	$('div#about div#nav a').click(function(e){
+	$('div#about a.scroll').click(function(e){
 		e.preventDefault();
 		var target = $('#' + $(this).prop('href').split('#')[1]);
-		container.scrollTo(target, 1000);
+		container.scrollTo(target, 750, {
+			easing: 'easeOutQuad'
+		});
 	});
 
 	var resizeContainer = function() {

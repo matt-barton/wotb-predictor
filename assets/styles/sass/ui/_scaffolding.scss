@@ -92,5 +92,29 @@ div#about div#container {
 }
 
 div#about div#container div.section{
-	height:		2000px;
+	height:				750px;
+	border:				1px solid $black;
+	background-color:	$color3;
+	margin-bottom:		30px;
+	-moz-border-radius: 20px;
+	border-radius: 		20px;
+	padding:			20px;
+}
+
+div#about div#container div.section-alt{
+	background-color:	$color2;
+}
+
+div#about div#container div.gamma {
+	margin-bottom: 10px;
+}
+
+div#about a#phc {
+	background:		url(/images/papworth.png) -0px -0px no-repeat;
+	height:			95px;
+	width:			292px;
+	float:			left;
+	clear:			left;
+	text-indent:	-9999px;
+	margin-bottom:	20px;
 }
