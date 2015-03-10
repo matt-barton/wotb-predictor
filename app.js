@@ -138,7 +138,13 @@ app.get('/', function(request, response, next) {
 });
 
 app.get('/register', function(request, response, next) {
-    pages.register(response);
+    var auth = require('./lib/auth')(request.session, users);
+    if (auth.loggedIn()) {
+        pages.indexRedirect(response);
+    }
+    else {
+        pages.register(response);
+    }
 });
 
 app.get('/table', function(request, response, next) {
