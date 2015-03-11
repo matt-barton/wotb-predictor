@@ -268,17 +268,7 @@ function fixturesAdminInit() {
 				});
 			});
 
-			$.blockUI({
-				css: { 
-		            border: 'none', 
-		            padding: '15px', 
-		            backgroundColor: '#000', 
-		            '-webkit-border-radius': '10px', 
-		            '-moz-border-radius': '10px', 
-		            opacity: .5, 
-		            color: '#fff' 
-	    		}
-	    	});
+			$.blockUI();
 
 			$.ajax({
 				type: 'post',
@@ -333,17 +323,7 @@ function fixturesAdminInit() {
 
 		if (!confirm('Game will become read-only once active, so only proceed if you\'re sure all the fixtures are right.')) return;
 
-		$.blockUI({
-			css: { 
-	            border: 'none', 
-	            padding: '15px', 
-	            backgroundColor: '#000', 
-	            '-webkit-border-radius': '10px', 
-	            '-moz-border-radius': '10px', 
-	            opacity: .5, 
-	            color: '#fff' 
-    		}
-    	});
+		$.blockUI();
 		$.ajax({
 			type: 'post',
 			url: '/activateSeason',
@@ -390,17 +370,7 @@ function fixturesAdminInit() {
 	var redirectToSelectedGame = function() {
 		var chosenGame = $('#game-choice-select').val();
 		closeDialog();
-		$.blockUI({
-			css: { 
-	            border: 'none', 
-	            padding: '15px', 
-	            backgroundColor: '#000', 
-	            '-webkit-border-radius': '10px', 
-	            '-moz-border-radius': '10px', 
-	            opacity: .5, 
-	            color: '#fff' 
-    		}
-    	});
+		$.blockUI();
 		window.location.href = $('#editSeasonUrl').val() + chosenGame;
 	};
 

@@ -58,20 +58,4 @@
 
 <script>
 	$(document).ready(jsInit);
-
-	$(document).ready(function(){
-
-		var x = $('<button>Test</button>').click(function(){
-			var button = $(this);
-			button.hide();
-			$.blockUI();
-			setTimeout(function(){
-				$.unblockUI();
-				button.show();
-			}, 5000);
-		});
-
-		$('div#first').append(x);
-
-	});
 </script>
