@@ -106,13 +106,30 @@ app.set('view engine', 'handlebars');
 app.use(express.cookieParser('qDe!24X5wVrbsfda43^34%4£3&'));
 app.use(express.session({secret: 'asd7bjuw3mbd8x7£bbqdkj2!8^*p'}));
 
+/*
+* Methods
+*/
+function autoLogin (request, response, users, auth, db, onSuccess, onError) {
+    var clientIp = ipware.get_ip(request).clientIp;
+    auth.doAutoLogin(request.cookies.autologin, clientIp, function() {
+        onSuccess();
+    }, function(e) {
+        console.log('\nERROR\n');
+        console.log(e);
+        response.clearCookie('autologin');
+        pages.index(response, auth, db, {
+            loginError: e,
+            username: request.body.username
+        }, onError);
+    });
+}
+
 /* 
  * Routes
  */
 app.get('/', function(request, response, next) {
 
     var auth = require('./lib/auth')(request.session, users);
-    var clientIp = ipware.get_ip(request).clientIp;
 
     var onError = function (e){
         console.log(e);
@@ -120,16 +137,8 @@ app.get('/', function(request, response, next) {
     };
 
     if (request.cookies.autologin && !auth.loggedIn()) {
-        auth.doAutoLogin(request.cookies.autologin, clientIp, function(e) {
+        autoLogin(request, response, users, auth, db, onError, function() {
             pages.index(response, auth, db, {}, onError);
-        }, function(e) {
-            console.log('\nERROR\n');
-            console.log(e);
-            response.clearCookie('autologin');
-            pages.index(response, auth, db, {
-                loginError: e,
-                username: request.body.username
-            }, onError);
         });
     }
     else {
@@ -149,12 +158,34 @@ app.get('/register', function(request, response, next) {
 
 app.get('/table', function(request, response, next) {
     var auth = require('./lib/auth')(request.session, users);
-    pages.leagueTable(response, auth);
+    var onError = function (e){
+        console.log(e);
+        return next(e);
+    };
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        autoLogin(request, response, users, auth, db, onError, function() {
+            pages.leagueTable(response, auth);
+        });
+    }
+    else {
+        pages.leagueTable(response, auth);
+    }
 });
 
 app.get('/about', function(request, response, next) {
     var auth = require('./lib/auth')(request.session, users);
-    pages.about(response, auth);
+    var onError = function (e){
+        console.log(e);
+        return next(e);
+    };
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        autoLogin(request, response, users, auth, db, onError, function() {
+            pages.about(response, auth);
+        });
+    }
+    else {
+        pages.about(response, auth);
+    }
 });
 
 app.get('/jsonCheckUsername', function(request, response, next){
@@ -231,9 +262,18 @@ app.get('/signOut', function(request, response, next){
 
 app.get('/admin', function(request, response, next) {
     var auth = require('./lib/auth')(request.session, users);
-    pages.admin.index(response, auth, {}, function (e) {
+    var onError = function (e){
+        console.log(e);
         return next(e);
-    });
+    };
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        autoLogin(request, response, users, auth, db, onError, function() {
+            pages.admin.index(response, auth, {}, onError);
+        });
+    }
+    else {
+        pages.admin.index(response, auth, {}, onError);
+    }
 });
 
 app.get('/admin/fixtures', function(request, response, next) {
@@ -247,14 +287,23 @@ app.get('/admin/fixtures', function(request, response, next) {
         message = request.session.userMessage.message;
         request.session.userMessage = null;
     }
-
-    pages.admin.fixtures(response, auth, db, {
+    var onError = function (e){
+        console.log(e);
+        return next(e);
+    };
+    var data = {
         action: request.query.action == null ? null : request.query.action,
         id: request.query.id == null ? null : request.query.id,
         message: message
-    }, function (e){
-        return next(e);
-    });
+    };
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        autoLogin(request, response, users, auth, db, onError, function() {
+            pages.admin.fixtures(response, auth, db, data, onError);
+        });
+    }
+    else {
+        pages.admin.fixtures(response, auth, db, data, onError);
+    }
 });
 
 app.post('/saveFixtures', function(request, response, next){
@@ -288,9 +337,17 @@ app.get('/admin/reports/predictions', function(request, response, next) {
         }
         catch(e){}
     }
-    pages.admin.reports.predictions(response, auth, db, function(e) {
+    var onError = function(e) {
         if (e) return next(e);
-    }, from);
+    };
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        autoLogin(request, response, users, auth, db, onError, function() {
+            pages.admin.reports.predictions(response, auth, db, onError, from);
+        });
+    }
+    else {
+        pages.admin.reports.predictions(response, auth, db, onError, from);
+    }
 });
 
 app.get('/admin/reports/predictionsTable', function(request, response, next) {
@@ -302,9 +359,19 @@ app.get('/admin/reports/predictionsTable', function(request, response, next) {
         }
         catch(e){}
     }
-    pages.admin.reports.predictions(response, auth, db, function(e) {
+    var onError = function(e) {
         if (e) return next(e);
-    }, from, 'table', request.query.ms == null ? null : request.query.ms);
+    };
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        autoLogin(request, response, users, auth, db, onError, function() {
+            pages.admin.reports.predictions(response, auth, db, onError,
+                from, 'table', request.query.ms == null ? null : request.query.ms);
+        });
+    }
+    else {
+        pages.admin.reports.predictions(response, auth, db, onError,
+            from, 'table', request.query.ms == null ? null : request.query.ms);
+    }
 });
 
 app.post('/activateSeason', function(request, response, next){
@@ -370,6 +437,7 @@ app.post('/savePredictions', function(request, response, next){
         pages.indexRedirect(response);
     }
 });
+
 /*
 * Error Handling
 */
