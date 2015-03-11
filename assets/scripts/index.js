@@ -1,5 +1,10 @@
 function jsInit() {
 
+	if (!cookieCheck()) {
+		$('#cookie-notice').show();
+		return;
+	}
+
 	var displaySaveButtons = function() {
 		$('.post-predictions').show();
 	}
@@ -88,4 +93,9 @@ function jsInit() {
 			}
 		});
 	});
+}
+
+function cookieCheck() {
+	$.cookie('test-enabled', 1);
+	return ($.cookie('test-enabled') == 1);
 }
