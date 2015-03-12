@@ -112,6 +112,9 @@ app.use(express.session({secret: 'asd7bjuw3mbd8x7£bbqdkj2!8^*p'}));
 function autoLogin (request, response, users, auth, db, onSuccess, onError) {
     var clientIp = ipware.get_ip(request).clientIp;
     auth.doAutoLogin(request.cookies.autologin, clientIp, function() {
+        auth.updateTrackingCookie(auth.userId(), request, response, function(e) {
+            if (e) return onError(e);
+        });
         onSuccess();
     }, function(e) {
         console.log('\nERROR\n');
@@ -231,6 +234,9 @@ app.post('/signIn', function(request, response){
     auth.signIn( 
         data,
         function(){
+            auth.updateTrackingCookie(auth.userId(), request, response, function(e) {
+                if (e) return onError(e);
+            });
             if (request.body.rememberMe) {
                 var clientIp = ipware.get_ip(request).clientIp;
                 auth.setLoginCookie(request.body, clientIp, response, function(){
@@ -240,7 +246,6 @@ app.post('/signIn', function(request, response){
             else {
                 pages.indexRedirect(response);
             }
-
         },
         function(e){
             console.log('\nERROR\n');

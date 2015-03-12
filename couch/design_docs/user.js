@@ -28,6 +28,15 @@ module.exports = {
           emit(doc._id, doc);
         }
       }
+    },
+
+    withPseudonymns: {
+      map: function(doc) {
+        if (doc.type && doc.type == 'user' &&
+          doc.pseudonyms && Array.isArray(doc.pseudonyms) && doc.pseudonyms.length > 0) {
+          emit(doc._id, doc);
+        }
+      }
     }
   }
 };
