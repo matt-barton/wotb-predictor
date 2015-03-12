@@ -45,7 +45,7 @@ var db = new(cradle.Connection)(dbHost, dbPort, dbOptions)
 /*
 * Libraries
 */
-var pages = require('./lib/pages');
+var pages = require('./lib/pages')(process.env.GOOGLE_ANALYTICS_KEY);
 var users = require('./lib/users')(db);
 
 /*
