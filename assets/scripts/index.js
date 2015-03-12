@@ -87,5 +87,9 @@ function jsInit() {
 
 function cookieCheck() {
 	$.cookie('test-enabled', 1);
-	return ($.cookie('test-enabled') == 1);
+	if ($.cookie('test-enabled') == 1) {
+		$.removeCookie('test-enabled');
+		return true;
+	}
+	return false;
 }
