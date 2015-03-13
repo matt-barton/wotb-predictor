@@ -14,7 +14,7 @@ function registerInit() {
     }
 
     username.on('keydown', function() {
-        $('.auto-image', $(this).parent()).remove();
+        $('.username-feedback').remove();
         $(this).removeClass('warning-field');
         $('#registration').off('submit');
     });
@@ -23,11 +23,13 @@ function registerInit() {
         $.getJSON('/jsonCheckUserName', {
             username: username.val()
         }, function(result){
-            var title = result.valid ? 'Username OK.' : 'Username is already in use.';
+            var errorArea = $('.error-area', username.parent().parent());
+            var message = result.valid ? '' : 'Username is already in use.';
             var classname = result.valid ? 'fa-check success-icon' : 'fa-remove warning-icon';
             username
                 .parent()
-                .append('<i class="auto-image fa fa-large ' + classname + '" title="' + title + '" />');
+                .append('<i class="username-feedback fa fa-large ' + classname + '" />');
+            errorArea.append('<span class="username-feedback">' + message + '</span>');
 
             if (!result.valid) {
                 username.addClass('warning-field');
@@ -37,7 +39,8 @@ function registerInit() {
     });
 
     $('.register-password').on('keyup', function() {
-        $('.auto-feedback', $(this).parent()).remove();
+        var errorArea = $('.error-area', repeat.parent().parent());
+        $('.auto-feedback').remove();
         if (password.val() == '' || repeat.val() == '') return;
         var classname, message;
         if (password.val() == repeat.val()) {
@@ -52,11 +55,16 @@ function registerInit() {
             message = 'Passwords don\'t match';
             $('#registration').submit(preventSubmit);
         }
+        errorArea.append('<span class="auto-feedback">' + message + '</span>');
         repeat
             .parent()
-            .append('<i class="auto-feedback fa fa-large ' + classname + '" /> <span class="auto-feedback">'
-                + message + '</span>');
+            .append('<i class="auto-feedback fa fa-large ' + classname + '" />');
     });
 
     if (username.val()) username.blur();
+
+    var serverError = $('#server-error');
+    if (serverError.text().trim() != '') {
+        serverError.show();
+    }
 }
