@@ -103,8 +103,30 @@ app.set('view engine', 'handlebars');
 /*
 * Sessions
 */
+var redisParams = {};
+if (process.env.NODE_ENV === 'production') {
+    redisParams = {
+        host: process.env.PROD_REDIS_HOST,
+        port: process.env.PROD_REDIS_PORT,
+        db: process.env.PROD_REDIS_DB,
+        pass: process.env.PROD_REDIS_PW
+    };
+}
+else {
+    redisParams = {
+        host: process.env.DEV_REDIS_HOST,
+        port: process.env.DEV_REDIS_PORT,
+        db: process.env.DEV_REDIS_DB,
+        pass: process.env.DEV_REDIS_PW
+    };
+}
+console.log(redisParams);
+var redis = require('connect-redis')(express);
 app.use(express.cookieParser('qDe!24X5wVrbsfda43^34%4£3&'));
-app.use(express.session({secret: 'asd7bjuw3mbd8x7£bbqdkj2!8^*p'}));
+app.use(express.session({
+    store: new redis(redisParams),
+    secret: 'asd7bjuw3mbd8x7£bbqdkj2!8^*p'
+}));
 
 /*
 * Methods

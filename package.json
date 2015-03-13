@@ -8,6 +8,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.6.5",
+    "connect-redis": "1.4.7",
     "couchapp": "0.11.0",
     "cradle": "0.6.7",
     "express": "~3.4.0",
