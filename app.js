@@ -6,7 +6,6 @@
 var express = require('express');
 var app = express();
 var port = 3000;
-var bodyParser = require('body-parser');
 
 /*
 * IP info
@@ -54,14 +53,10 @@ var users = require('./lib/users')(db);
 var exphbs = require('express3-handlebars');
 var helpers = require('./lib/handlesbars-helpers.js')();
 
-// For gzip compression
-app.use(express.compress());
-
 // Handle http post
+var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-app.use(express.urlencoded());
-app.use(express.json());
 
 /*
  * Config for Production and Development
@@ -103,30 +98,29 @@ app.set('view engine', 'handlebars');
 /*
 * Sessions
 */
-var redisParams = {};
+var redisUrl;
 if (process.env.NODE_ENV === 'production') {
-    redisParams = {
-        host: process.env.PROD_REDIS_HOST,
-        port: process.env.PROD_REDIS_PORT,
-        db: process.env.PROD_REDIS_DB,
-        pass: process.env.PROD_REDIS_PW
-    };
+    redisUrl = process.env.REDISCLOUD_URL;
 }
 else {
-    redisParams = {
-        host: process.env.DEV_REDIS_HOST,
-        port: process.env.DEV_REDIS_PORT,
-        db: process.env.DEV_REDIS_DB,
-        pass: process.env.DEV_REDIS_PW
-    };
+    redisUrl = process.env.DEV_REDISCLOUD_URL;
 }
-console.log(redisParams);
-var redis = require('connect-redis')(express);
-app.use(express.cookieParser('qDe!24X5wVrbsfda43^34%4£3&'));
-app.use(express.session({
-    store: new redis(redisParams),
-    secret: 'asd7bjuw3mbd8x7£bbqdkj2!8^*p'
+var expressSession = require('express-session');
+var RedisStore  = require('connect-redis')(expressSession);
+app.use(expressSession({
+    secret: process.env.NODE_SESSION_SECRET,
+    store: new RedisStore({
+        url: redisUrl
+    }),
+    resave: true,
+    saveUninitialized: true
 }));
+
+/*
+* Cookies
+*/
+var cookieParser = require('cookie-parser');
+app.use(cookieParser(process.env.NODE_COOKIE_SECRET));
 
 /*
 * Methods
