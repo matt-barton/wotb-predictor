@@ -125,9 +125,9 @@ app.use(cookieParser(process.env.NODE_COOKIE_SECRET));
 /*
 * Methods
 */
-function autoLogin (request, response, users, auth, db, onSuccess, onError) {
+function autoLogin (request, response, users, auth, db, onError, onSuccess) {
     var clientIp = ipware.get_ip(request).clientIp;
-    auth.doAutoLogin(request.cookies.autologin, clientIp, function() {
+    auth.doAutoLogin(request.cookies.autologin, response, clientIp, function() {
         auth.updateTrackingCookie(auth.userId(), request, response, function(e) {
             if (e) return onError(e);
         });
@@ -239,7 +239,7 @@ app.post('/doSignUp', function(request, response, next) {
         });
 });
 
-app.post('/signIn', function(request, response){
+app.post('/signIn', function(request, response, next){
     var auth = require('./lib/auth')(request.session, users);
 
     var onError = function (e){
@@ -252,16 +252,15 @@ app.post('/signIn', function(request, response){
         function(){
             auth.updateTrackingCookie(auth.userId(), request, response, function(e) {
                 if (e) return onError(e);
-            });
-            if (request.body.rememberMe) {
-                var clientIp = ipware.get_ip(request).clientIp;
-                auth.setLoginCookie(request.body, clientIp, response, function(){
+                if (request.body.rememberMe) {
+                    auth.setLoginCookie(request.body.username, response, null, function(){
+                        pages.indexRedirect(response);
+                    });
+                }
+                else {
                     pages.indexRedirect(response);
-                });
-            }
-            else {
-                pages.indexRedirect(response);
-            }
+                }
+            });
         },
         function(e){
             console.log('\nERROR\n');
@@ -275,7 +274,8 @@ app.post('/signIn', function(request, response){
 
 app.get('/signOut', function(request, response, next){
     var auth = require('./lib/auth')(request.session, users);
-    auth.signOut(function(){
+    auth.signOut(function(e){
+        if (e) return next(e);
         response.clearCookie('autologin');
         pages.indexRedirect(response);
     });
