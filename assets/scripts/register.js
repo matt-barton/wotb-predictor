@@ -20,10 +20,12 @@ function registerInit() {
     });
 
     username.on('blur', function() {
+        var errorArea = $('.error-area', username.parent().parent());
+        $('.username-feedback').remove();
+        if (username.val().length == 0) return;
         $.getJSON('/jsonCheckUserName', {
             username: username.val()
         }, function(result){
-            var errorArea = $('.error-area', username.parent().parent());
             var message = result.valid ? '' : 'Username is already in use.';
             var classname = result.valid ? 'fa-check success-icon' : 'fa-remove warning-icon';
             username
