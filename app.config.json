@@ -2,5 +2,6 @@
   "game": {
     "miniSeasonsPerGame": 3
   },
-  "leageTableUrl": "http://wotb.matt.cx"
+  "leageTableUrl": "http://wotb.matt.cx",
+  "authCodeLength": 5
 }
