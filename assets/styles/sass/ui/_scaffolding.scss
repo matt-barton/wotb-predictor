@@ -92,7 +92,7 @@ div#about div#container {
 }
 
 div#about div#container div.section{
-	height:				750px;
+	height:				375px;
 	border:				1px solid $black;
 	background-color:	$color3;
 	margin-bottom:		30px;
@@ -115,8 +115,9 @@ div#about a#phc {
 	width:			292px;
 	float:			left;
 	clear:			left;
-	text-indent:	-9999px;
-	margin-bottom:	20px;
+	text-indent:	            -9999px;
+	margin-bottom:		20px;
+	margin-right:		5px;
 }
 
 form#registration div#fields {
@@ -152,4 +153,8 @@ form#registration div#server-error {
 	padding-top:		10px;
 	padding-bottom:	15px;
 	display:			none;
+}
+
+iframe#league-table{
+	margin-bottom: 40px;
 }
