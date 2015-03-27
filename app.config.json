@@ -2,6 +2,11 @@
   "game": {
     "miniSeasonsPerGame": 3
   },
-  "leageTableUrl": "http://wotb.matt.cx",
-  "authCodeLength": 5
+  "urls": {
+		"leageTable": "http://wotb.matt.cx",
+		"wotb": "http://www.wrathofthebarclay.co.uk/interactive/board",
+		"papworth": "http://www.papworthhospitalcharity.org.uk/get-involved/donate"
+  	},
+  "authCodeLength": 5,
+  "contactEmail": "predictions@matt.cx"
 }

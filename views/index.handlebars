@@ -5,6 +5,17 @@
 
 {{#if auth.loggedIn}}
 
+{{#unless auth.userAccepted}}
+	<div id="auth-notice" class="grid four-fifths">
+		<div class="grid__item one-whole">
+			<fieldset>
+				<legend>Complete Registration</legend>
+				To complete your registration, post your auth code ({{auth.userAuthCode}}) on the <a href="{{config.urls.wotb}}" target="_blank">WotB</a> messageboard, for the attention of Yellalee.  Until you do that, your predictions won't be counted.
+			</fieldset>
+		</div>
+	</div>
+{{/unless}}
+
 {{#if season.current}}
 <div id="first" class="grid">
 	<div class="grid__item five-eighths">
@@ -57,7 +68,7 @@
 {{/if}}
 
 <div>
-	<button type="button" class="btn btn--negative post-predictions hidden">Save Predictions</button>
+	<button type="button" class="btn btn--negative post-predictions hidden last">Save Predictions</button>
 </div>
 
 <script>
