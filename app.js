@@ -358,16 +358,18 @@ app.get('/admin/reports/predictions', function(request, response, next) {
         }
         catch(e){}
     }
+    var onlyAcceptedUsers = request.query.t ? true : false;
     var onError = function(e) {
         if (e) return next(e);
     };
+    function doPage() {
+        pages.admin.reports.predictions(response, auth, db, onError, from, null, null, onlyAcceptedUsers);
+    }
     if (request.cookies.autologin && !auth.loggedIn()) {
-        autoLogin(request, response, users, auth, db, onError, function() {
-            pages.admin.reports.predictions(response, auth, db, onError, from);
-        });
+        autoLogin(request, response, users, auth, db, onError, doPage);
     }
     else {
-        pages.admin.reports.predictions(response, auth, db, onError, from);
+        doPage();
     }
 });
 
@@ -380,18 +382,20 @@ app.get('/admin/reports/predictionsTable', function(request, response, next) {
         }
         catch(e){}
     }
+    var miniSeason = request.query.ms ? request.query.ms : null;
+    var onlyAcceptedUsers = request.query.t ? true : false;
     var onError = function(e) {
         if (e) return next(e);
     };
+    function doPage() {
+        pages.admin.reports.predictions(response, auth, db, onError, from,
+            'table', miniSeason, onlyAcceptedUsers);
+    }
     if (request.cookies.autologin && !auth.loggedIn()) {
-        autoLogin(request, response, users, auth, db, onError, function() {
-            pages.admin.reports.predictions(response, auth, db, onError,
-                from, 'table', request.query.ms == null ? null : request.query.ms);
-        });
+        autoLogin(request, response, users, auth, db, onError, doPage);
     }
     else {
-        pages.admin.reports.predictions(response, auth, db, onError,
-            from, 'table', request.query.ms == null ? null : request.query.ms);
+        doPage();
     }
 });
 

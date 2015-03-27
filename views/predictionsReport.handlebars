@@ -1,4 +1,4 @@
-<h1>Player Predictions</h1>
+<div class="beta">Player Predictions <span class="epsilon">({{#if onlyAcceptedUsers}}Authorised Players Only{{else}}All Players{{/if}})</span></div>
 
 {{#compare season.current '==' false}}
 No active season to report on.
@@ -7,7 +7,10 @@ No active season to report on.
 <div class="grid page-block eleven-twelfths">
 	<div class="grid__item one-whole">
 		Show predictions made since: <input type="text" id="from-date" value="{{fromDate}}" /><button class="btn btn--small btn--positive" id="from-date-btn">Go</button>
-	</div>
+	</div><!--
+ --><div class="grid__item one-whole">
+		<a href="#" id="auth">Show predictions for {{#if onlyAcceptedUsers}}all players{{else}}authorised players only{{/if}}.</a>
+ 	</div>
 </div>
 
 {{#each miniseasons}}
@@ -55,5 +58,8 @@ No active season to report on.
 {{/compare}}
 
 <script>
-$(document).ready(initPredictionsReport);
+$(document).ready(function() {
+	var onlyAcceptedUsers = {{#if onlyAcceptedUsers}}true{{else}}false{{/if}};
+	initPredictionsReport(onlyAcceptedUsers);
+});
 </script>

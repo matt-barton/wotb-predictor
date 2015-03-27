@@ -1,4 +1,7 @@
-function initPredictionsReport() {
+function initPredictionsReport(authorisedUsersOnly) {
+
+	$('a#auth').prop('href', location.pathname 
+		+ UpdateQueryString('t', authorisedUsersOnly ? null : '1', location.search));
 
 	$('.incomplete-predictions-toggle').click(function(evt){
 		var link = $(this);
