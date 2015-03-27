@@ -48,6 +48,11 @@
             <div id="signin" style="top:0px!important;">
                 {{#if auth.loggedIn}}
                 <span class="btn" style="cursor: default;" href="#"><i class="fa fa-user fa-fw"></i> {{auth.username}}</span> (<a href="/signOut">Sign Out</a>)
+                {{#unless auth.userAccepted}}
+                <div id="auth-code">
+                    Your Auth Code: {{auth.userAuthCode}}
+                </div>
+                {{/unless}}
                 {{else}}
                 <form action="/signIn" method="post">
                     <div class="float--left">
