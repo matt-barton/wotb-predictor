@@ -37,6 +37,19 @@ module.exports = {
           emit(doc._id, doc);
         }
       }
+    },
+
+    authCodes: {
+      map: function(doc) {
+        if (doc.type && doc.type == 'user') {
+          emit(doc.username.toLowerCase(), {
+            username: doc.username,
+            id: doc._id,
+            accepted: doc.accepted,
+            authCode: doc.authCode
+          });
+        }
+      }
     }
   }
 };

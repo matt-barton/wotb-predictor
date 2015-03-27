@@ -150,17 +150,22 @@ form#registration div#server-error {
 	width:			100%;
 	color:			red;
 	text-align:		center;
-	padding-top:		10px;
+	padding-top:	10px;
 	padding-bottom:	15px;
-	display:			none;
+	display:		none;
 }
 
 div#auth-notice {
-	margin-top: 10px;
-	margin-left: auto;
-	margin-right: auto;
+	margin-top:		10px;
+	margin-left:	auto;
+	margin-right:	auto;
 }
 
 .last {
-	margin-bottom: 30px;
+	margin-bottom:	30px;
+}
+
+div.centre {
+	margin-left:	auto;
+	margin-right:	auto;
 }

@@ -1,0 +1,36 @@
+<div class="beta">Registration Report</div>
+
+<div class="grid last eleven-twelfths centre">
+	<div class="grid__item one-whole">
+		<table class="table--bordered table--striped">
+			<tr>
+				<th>
+					Player
+				</th>
+				<th>
+					Auth Code
+				</th>
+				<th>
+					Authorise?
+				</th>
+			</tr>
+		{{#each users}}
+			{{#with value}}
+			<tr>
+				<td>
+					{{username}}
+				</td>
+				<td>
+					{{authCode}}
+				</td>
+				<td>
+					{{#unless accepted}}
+					<a href="/authoriseUser?id={{id}}" title="Authorise account for {{username}}">Authorise</a>
+					{{/unless}}
+				</td>
+			</tr>
+			{{/with}}
+		{{/each}}
+		</table>
+	</div>
+</div>

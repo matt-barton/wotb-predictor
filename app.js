@@ -395,6 +395,46 @@ app.get('/admin/reports/predictionsTable', function(request, response, next) {
     }
 });
 
+
+app.get('/admin/reports/registration', function(request, response, next) {
+    var auth = require('./lib/auth')(request.session, users);
+    var onError = function(e) {
+        if (e) return next(e);
+    };
+    function doPage() {
+        pages.admin.reports.registration(response, auth, db, onError);
+    }
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        autoLogin(request, response, users, auth, db, onError, doPage);
+    }
+    else {
+        doPage();
+    }
+});
+
+app.get('/authoriseUser', function(request, response, data){
+    var auth = require('./lib/auth')(request.session, users);
+    var onError = function(e) {
+        if (e) return next(e);
+    };
+    function doPage() {
+        pages.admin.reports.registration(response, auth, db, onError);
+    }
+    if (auth.loggedIn() && auth.isAdmin()) {
+        if (!request.query.id) return doPage();
+        var userId = request.query.id;
+        users.authoriseUser(userId, function(e) {
+            if (e) return onError(e);
+            doPage();
+        });
+    }
+    else {
+        doPage();
+    }
+
+
+});
+
 app.post('/activateSeason', function(request, response, next){
     var auth = require('./lib/auth')(request.session, users);
     if (auth.loggedIn() && auth.isAdmin()) {
