@@ -399,7 +399,6 @@ app.get('/admin/reports/predictionsTable', function(request, response, next) {
     }
 });
 
-
 app.get('/admin/reports/registration', function(request, response, next) {
     var auth = require('./lib/auth')(request.session, users);
     var onError = function(e) {
@@ -413,6 +412,40 @@ app.get('/admin/reports/registration', function(request, response, next) {
     }
     else {
         doPage();
+    }
+});
+
+app.get('/admin/passwordReset', function(request, response, next) {
+    var auth = require('./lib/auth')(request.session, users);
+    var onError = function(e) {
+        if (e) return next(e);
+    };
+    function doPage() {
+        pages.admin.passwordReset(response, auth, db, onError);
+    }
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        autoLogin(request, response, users, auth, db, onError, doPage);
+    }
+    else {
+        doPage();
+    }
+});
+
+app.get('/admin/resetUserPassword', function(request, response, data){
+    var auth = require('./lib/auth')(request.session, users);
+    var onError = function(e) {
+        if (e) return next(e);
+    };
+    if (auth.loggedIn() && auth.isAdmin()) {
+        if (!request.query.id) return pages.admin.passwordReset(response, auth, db, onError);
+        var userId = request.query.id;
+        users.resetPassword(userId, function(e, newPassword) {
+            if (e) return onError(e);
+            pages.admin.passwordResetResult (response, auth, db, userId, newPassword, onError);
+        });
+    }
+    else {
+        pages.index(response, auth, db, {}, onError);
     }
 });
 
