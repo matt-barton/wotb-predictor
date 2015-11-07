@@ -148,20 +148,32 @@ function autoLogin (request, response, users, auth, db, onError, onSuccess) {
  */
 app.get('/', function(request, response, next) {
 
-    var auth = require('./lib/auth')(request.session, users);
+    var auth = require('./lib/auth')(request.session, users),
+        message;
+    if (request.session.userMessage
+            && request.session.userMessage.page == '/'
+            && request.session.userMessage.user == auth.username())
+    {
+        message = request.session.userMessage.message;
+        request.session.userMessage = null;
+    }
 
     var onError = function (e){
         console.log(e);
         return next(e);
     };
 
+    var data = {
+        message: message
+    }
+
     if (request.cookies.autologin && !auth.loggedIn()) {
         autoLogin(request, response, users, auth, db, onError, function() {
-            pages.index(response, auth, db, {}, onError);
+            pages.index(response, auth, db, data, onError);
         });
     }
     else {
-        pages.index(response, auth, db, {}, onError);
+        pages.index(response, auth, db, data, onError);
     }
 });
 
@@ -534,6 +546,54 @@ app.post('/savePredictions', function(request, response, next){
     else {
         pages.indexRedirect(response);
     }
+});
+
+app.get('/changeMyPassword', function(request, response, next) {
+    var auth = require('./lib/auth')(request.session, users);
+    if (!auth.loggedIn()) return pages.indexRedirect(response);
+
+    var onError = function(e) {
+        if (e) return next(e);
+    };
+    var data = {
+        auth: auth
+    }
+    function doPage() {
+        pages.changeMyPassword(response, data);
+    }
+    if (request.cookies.autologin && !auth.loggedIn()) {
+        autoLogin(request, response, users, auth, db, onError, doPage);
+    }
+    else {
+        doPage();
+    }
+});
+
+app.post('/changeMyPassword', function (request, response, next) {
+    var auth = require('./lib/auth')(request.session, users);
+    var data = request.body;
+    auth.changePassword(
+        data, 
+        function(message){
+            if (message) {
+                request.session.userMessage = {
+                    page: '/',
+                    user: auth.username(),
+                    message: message
+                }
+            }
+            pages.indexRedirect(response);
+        },
+        function(e){
+            console.log('\nERROR\n');
+            console.log(e);
+            pages.changeMyPassword(response, {
+                auth: auth,
+                error: e,
+                username: request.body.username
+            });
+        });
+
 });
 
 /*

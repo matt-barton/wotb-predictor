@@ -12,7 +12,10 @@ function jsInit() {
 	var hideSaveButtons = function() {
 		$('.post-predictions').hide();
 	}
-
+	var msg = $('#message').val();
+	if (msg) {
+		notifyBar(msg, 'success');
+	}
 
 	$('.enable-save').on('change', displaySaveButtons);
 

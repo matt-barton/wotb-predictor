@@ -30,8 +30,8 @@ function notifyBar(message, style, title) {
 		style : style,
 		contentType : "inline",
 		animDuration : "fast",
-		closeArea : "button",
-		activeDuration: 2500
+		closeArea : "element",
+		activeDuration: 15000
 	}).bar("top");
 }
 

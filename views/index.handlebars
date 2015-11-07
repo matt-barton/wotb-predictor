@@ -3,6 +3,10 @@
 
 <div class="gamma cookie-warning hidden" id="cookie-notice">This site requires cookies to be enabled in your browser.</div>
 
+{{#if message}}
+	<input type="hidden" id="message" name="message" value="{{message}}"/>
+{{/if}}
+
 {{#if auth.loggedIn}}
 
 {{#unless auth.userAccepted}}

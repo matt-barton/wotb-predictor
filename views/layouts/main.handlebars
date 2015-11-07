@@ -47,9 +47,15 @@
         <header>
             <div id="signin" style="top:0px!important;">
                 {{#if auth.loggedIn}}
-                <span class="btn" style="cursor: default;" href="#"><i class="fa fa-user fa-fw"></i> {{auth.username}}</span> (<a href="/signOut">Sign Out</a>)
+                <div class="float--left">
+                    <span class="btn" style="cursor: default;" href="#"><i class="fa fa-user fa-fw"></i> {{auth.username}}</span>
+                </div>
+                <div class="float--left">
+                    &nbsp;<a href="/signOut">Sign Out</a><br/>
+                    &nbsp;<a href="/changeMyPassword">Change My Password</a>
+                </div>
                 {{#unless auth.userAccepted}}
-                <div id="auth-code">
+                <div id="auth-code" class="clr">
                     Your Auth Code: {{auth.userAuthCode}}
                 </div>
                 {{/unless}}
